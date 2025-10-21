@@ -12,8 +12,8 @@ const navLinks = [
 
 export default function Header() {
     return (
-        <header className="w-full sticky top-0 z-40 bg-white/80 shadow">
-            <nav className="flex justify-center items-center gap-10 py-3 text-blue-900 font-bold text-lg">
+        <header className="w-full sticky top-0 z-40 bg-gradient-to-r from-blue-900 via-blue-600 to-teal-500 shadow">
+            <nav className="flex justify-center items-center gap-10 py-3 text-teal-200 font-bold text-lg">
                 {navLinks.map((link, idx) => (
                     <Link
                         key={link.name}
