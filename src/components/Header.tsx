@@ -18,7 +18,7 @@ export default function Header() {
                     <Link
                         key={link.name}
                         href={link.href}
-                        className="hover:text-blue-700 transition"
+                        className="hover:text-white transition"
                     >
                         {link.name}
                         {idx < navLinks.length - 1 && <span className="mx-2">|</span>}
