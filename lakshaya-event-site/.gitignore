@@ -39,5 +39,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-public/videos/lakshaya21.mp4
+public/videos
 .idea
