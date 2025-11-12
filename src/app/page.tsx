@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Intro from "@/components/Intro";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import GallerySection from "@/components/GallerySection";
 
 export default function SplashHome() {
     const router = useRouter();
@@ -21,10 +22,11 @@ export default function SplashHome() {
 
     return (
         <Intro
-            videoSrc="/videos/intro1.mp4"
+            videoSrc="/videos/intro.mp4"
             logoSrc="/images/logo.png"
             HeroComponent={HeroSection}
             AboutComponent={AboutSection}
+            GalleryComponent={GallerySection}
 
             onFinish={handleFinish}
         />

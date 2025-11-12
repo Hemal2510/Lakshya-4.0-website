@@ -1,86 +1,98 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Lottie from "lottie-react";
 
 interface SportCardProps {
     name: string;
-    lottiePath: string; // "/lottie/football.json"
+    lottiePath: string;
     photos: string[];
-    cardWidth?: number;
     cardHeight?: number;
+    isActive?: boolean;
+    onCycleComplete?: () => void;
+    onHoverStart?: () => void;
+    onHoverEnd?: () => void;
 }
 
 export default function SportCard({
                                       name,
                                       lottiePath,
                                       photos,
-                                      cardWidth = 600,
-                                      cardHeight = 400,
+                                      cardHeight = 350,
+                                      isActive = false,
+                                      onCycleComplete,
+                                      onHoverStart,
+                                      onHoverEnd,
                                   }: SportCardProps) {
-    const [hovered, setHovered] = useState(false);
     const [animationData, setAnimationData] = useState<any>(null);
     const [lottieDone, setLottieDone] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
     const [showLottie, setShowLottie] = useState(true);
     const animationRef = useRef<any>(null);
 
-    // Load Lottie JSON when component mounts
     useEffect(() => {
         fetch(lottiePath)
-            .then(res => res.json())
+            .then((res) => res.json())
             .then(setAnimationData)
             .catch(console.error);
     }, [lottiePath]);
 
-    // Handle hover: play Lottie once
+    // Auto play Lottie anim for active card
     useEffect(() => {
-        if (hovered && animationRef.current) {
-            setShowLottie(true);
-            animationRef.current.setDirection(1);
-            animationRef.current.goToAndPlay(0, true);
-            setLottieDone(false);
-        }
-        if (!hovered) {
-            setLottieDone(false);
-            setShowLottie(true);
-            setPhotoIndex(0);
-            if (animationRef.current) {
-                animationRef.current.goToAndStop(0, true); // Pause at first frame
+        if (animationData && animationRef.current) {
+            if (isActive) {
+                setShowLottie(true);
+                setLottieDone(false);
+                setPhotoIndex(0);
+                animationRef.current.stop();
+                animationRef.current.goToAndPlay(0, true);
+            } else {
+                setShowLottie(true);
+                setLottieDone(false);
+                setPhotoIndex(0);
+                animationRef.current.goToAndStop(0, true);
             }
         }
-    }, [hovered]);
+    }, [isActive, animationData]);
 
-    // Start cycling photos only after Lottie finishes
+    // Cycle photos after animation for active card only
     useEffect(() => {
-        if (!lottieDone) return;
+        if (!isActive || !lottieDone) return;
+        let count = 0;
         const interval = setInterval(() => {
-            setPhotoIndex(idx => (idx + 1) % photos.length);
-        }, 1500);
+            if (count + 1 === photos.length) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    if (onCycleComplete) onCycleComplete();
+                }, 1000);
+            } else {
+                count += 1;
+                setPhotoIndex(count);
+            }
+        }, 2000);
         return () => clearInterval(interval);
-    }, [lottieDone, photos.length]);
+    }, [isActive, lottieDone, photos.length, onCycleComplete]);
 
-    // Hide Lottie animation as soon as it is finished
     const handleLottieComplete = () => {
         setLottieDone(true);
-        setTimeout(() => setShowLottie(false), 200); // Short delay before fading out
+        setTimeout(() => setShowLottie(false), 300);
     };
 
     return (
         <div
-            className="group relative cursor-pointer rounded-2xl shadow-xl bg-blue-800/20 border    text-white overflow-hidden transition-all"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{ width: cardWidth, height: cardHeight, minWidth: cardWidth, minHeight: cardHeight }}
+            onMouseEnter={onHoverStart}
+            onMouseLeave={onHoverEnd}
+            className="group relative cursor-pointer rounded-2xl shadow-xl bg-blue-800/20 border text-white overflow-hidden transition-all flex flex-col justify-between"
+            style={{ height: cardHeight, width: "100%" }}
         >
             <div className="relative w-full h-full flex items-center justify-center">
-                {(showLottie && animationData) ? (
+                {showLottie && animationData ? (
                     <Lottie
                         lottieRef={animationRef}
                         animationData={animationData}
                         loop={false}
                         autoplay={false}
-                        speed={3}
+                        speed={2}
                         style={{
                             width: "100%",
                             height: "100%",
@@ -88,7 +100,7 @@ export default function SportCard({
                             top: 0,
                             left: 0,
                             opacity: showLottie ? 1 : 0,
-                            transition: "opacity 0.2s"
+                            transition: "opacity 0.2s",
                         }}
                         onComplete={handleLottieComplete}
                     />

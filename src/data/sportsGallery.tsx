@@ -61,5 +61,15 @@ export const sportsGallery = [
         ],
     },
 
+    {
+        name: "Tabletennis",
+        lottie: "/lottie/tabletennis.json",
+        photos: [
+            "/gallery/tabletennis1.jpg",
+            "/gallery/tabletennis2.jpg",
+            "/gallery/tabletennis3.jpg",
+        ],
+    },
+
     // Add more sports similarly
 ];

@@ -2,127 +2,149 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Replace with your logo image path
-const LAKSHYA_LOGO = "/images/logo.png"; // e.g. your final frame logo
+const LAKSHYA_LOGO = "/images/logo.png";
+const VIDEO_SRC = "/videos/intro.mp4"; // Your intro video
 
-export default function LandingWithIntroVideo({ videoSrc, HeroComponent, AboutComponent }) {
+export default function IntroWithTransition({ HeroComponent, AboutComponent, GalleryComponent }) {
     const [videoDone, setVideoDone] = useState(false);
-    const [showLogo, setShowLogo] = useState(false);
+    const [showTransition, setShowTransition] = useState(false);
+    const [transitionComplete, setTransitionComplete] = useState(false);
 
-    // Prevent scroll when video is playing
     useEffect(() => {
-        if (!videoDone) {
+        // Prevent scroll during intro
+        if (!transitionComplete) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "";
         }
-        // Clean up on unmount to always restore scroll
         return () => {
             document.body.style.overflow = "";
         };
-    }, [videoDone]);
+    }, [transitionComplete]);
 
     useEffect(() => {
-        // Start the video; show logo at the end (matches video length)
-        const logoDelay = setTimeout(() => setShowLogo(true), 5780); // logo shown ~last 0.5s
-        const doneDelay = setTimeout(() => setVideoDone(true), 5880); // video is 5.88s
+        // Video duration timing (adjust to match your video length)
+        const videoEndTimer = setTimeout(() => {
+            setVideoDone(true);
+            setShowTransition(true);
+        }, 6000); // 6 seconds, adjust as needed
 
-        return () => {
-            clearTimeout(logoDelay);
-            clearTimeout(doneDelay);
-        };
+        return () => clearTimeout(videoEndTimer);
     }, []);
 
+    useEffect(() => {
+        if (showTransition) {
+            // After 2 seconds of transition animation, complete and show main content
+            const completeTimer = setTimeout(() => {
+                setTransitionComplete(true);
+            }, 2000);
+            return () => clearTimeout(completeTimer);
+        }
+    }, [showTransition]);
+
     return (
-        <div className="relative w-full min-h-screen bg-black overflow-hidden">
-            {/* Intro Video Overlay */}
+        <div className="relative w-full min-h-screen bg-gray-900 overflow-hidden">
+            {/* Video Layer */}
             <AnimatePresence>
                 {!videoDone && (
                     <motion.div
-                        key="intro-overlay"
-                        className="fixed inset-0 z-40 flex items-center justify-center bg-black"
+                        key="video-layer"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black"
                         initial={{ opacity: 1 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 1 } }}
-                        style={{ pointerEvents: "auto" }}
+                        exit={{ opacity: 0, transition: { duration: 0.8 } }}
                     >
-                        {/* Video */}
-                        <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
-                            <video
-                                src={videoSrc}
-                                autoPlay
-                                playsInline
-                                muted
-                                className="w-auto h-auto max-w-full max-h-full object-contain"
-                                style={{
-                                    display: "block",
-                                    margin: "0 auto"
-                                }}
-                            />
-                        </div>
-
-                        {/* Animated Logo on last second */}
-                        <AnimatePresence>
-                            {showLogo && (
-                                <motion.div
-                                    key="lakshya-logo"
-                                    className="absolute w-full flex flex-col items-center justify-center"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{
-                                        opacity: 1,
-                                        scale: 0.51,
-                                        x: "-40vw",
-                                        y: "-40vh",
-                                        transition: { duration: 1.15, ease: "easeInOut" }
-                                    }}
-                                    transition={{ duration: 0.5, ease: "easeOut" }}
-                                    style={{ zIndex: 60 }}
-                                >
-                                    <img
-                                        src={LAKSHYA_LOGO}
-                                        alt="Lakshya Logo"
-                                        className="w-48 md:w-80"
-                                    />
-                                    <div className="mt-2 uppercase text-3xl md:text-5xl font-bold tracking-tight text-gray-200 drop-shadow-lg">
-                                        LAKSHYA 4.0
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        <video
+                            src={VIDEO_SRC}
+                            autoPlay
+                            playsInline
+                            muted
+                            className="w-auto h-auto max-w-full max-h-full object-contain"
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* "Sticky" Logo in corner, only after video */}
-            {videoDone && (
-                <motion.div
-                    className="fixed z-30 top-6 left-4 md:top-10 md:left-10 flex items-center gap-3"
-                    initial={{ opacity: 0, scale: 0.5, y: -40, x: -60 }}
-                    animate={{ opacity: 1, scale: 0.7, y: 0, x: 0 }}
-                    transition={{ duration: 0.75, type: "spring" }}
-                >
-                    <img src={LAKSHYA_LOGO} alt="Lakshya Logo Small" className="w-16 md:w-24" />
-                </motion.div>
-            )}
+            {/* Transition Overlay: Logo + Text split */}
+            <AnimatePresence>
+                {showTransition && !transitionComplete && (
+                    <motion.div
+                        key="transition-overlay"
+                        className="fixed inset-0 z-40 flex items-center justify-center bg-black"
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: 1 } }}
+                    >
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            {/* Logo - starts centered, moves left */}
+                            <motion.div
+                                className="absolute"
+                                initial={{ x: 0, y: -80, scale: 1 }}
+                                animate={{
+                                    x: "-35vw",
+                                    y: 0,
+                                    scale: 0.85,
+                                    transition: { duration: 1.5, ease: "easeInOut" }
+                                }}
+                            >
+                                <img
+                                    src={LAKSHYA_LOGO}
+                                    alt="Lakshya Logo"
+                                    className="w-[200px] md:w-[280px] lg:w-[340px] object-contain drop-shadow-xl"
+                                />
+                            </motion.div>
 
-            {/* Main Content Sections */}
+                            {/* Text - starts centered, moves right */}
+                            <motion.div
+                                className="absolute flex flex-col items-center"
+                                initial={{ x: 0, y: 120, opacity: 1 }}
+                                animate={{
+                                    x: "22vw",
+                                    y: -40,
+                                    opacity: 1,
+                                    transition: { duration: 1.5, ease: "easeInOut" }
+                                }}
+                            >
+                <span
+                    className="text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] font-extrabold bg-clip-text text-transparent whitespace-nowrap"
+                    style={{
+                        backgroundImage: 'linear-gradient(120deg, #38bdf8 15%, #6366f1 55%, #a78bfa 90%)',
+                        backgroundSize: '400% 400%',
+                        animation: 'waveGradient 4s ease-in-out infinite',
+                        lineHeight: 1
+                    }}
+                >
+                  LAKSHYA 4.0
+                </span>
+                            </motion.div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Main Content - Hero, About, Gallery */}
             <div className="relative z-10">
                 <AnimatePresence>
-                    {videoDone && (
+                    {transitionComplete && (
                         <motion.div
-                            key="hero"
-                            initial={{ opacity: 0, y: 40 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 1.1, ease: "easeOut" }}
-                            exit={{ opacity: 0 }}
+                            key="main-content"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, ease: "easeOut" }}
                         >
                             <HeroComponent />
                             <AboutComponent />
+                            <GalleryComponent />
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
+
+            <style>{`
+        @keyframes waveGradient {
+          0% { background-position: 0% 90%; }
+          50% { background-position: 100% 10%; }
+          100% { background-position: 0% 90%; }
+        }
+      `}</style>
         </div>
     );
 }
