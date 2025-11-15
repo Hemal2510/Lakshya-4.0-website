@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@developer-hub/liquid-glass": "^1.2.3",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-brands-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.0",
@@ -19,7 +20,9 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.546.0",
     "next": "15.5.6",
+    "ogl": "^1.0.11",
     "react": "19.1.0",
+    "react-bits": "^1.0.5",
     "react-countup": "^6.5.3",
     "react-dom": "19.1.0",
     "react-intersection-observer": "^9.16.0",

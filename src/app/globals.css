@@ -221,3 +221,89 @@
     opacity: 1;
     filter: blur(12px);
 }
+
+
+
+.glass-bg-card {
+    backdrop-filter: blur(16px) saturate(140%);
+    background: rgba(24, 25, 50, 0.24);
+    border-radius: 1.3rem;
+    box-shadow: 0 6px 35px rgba(0,26,80,0.11);
+    border: 1.8px solid rgba(100,180,255,0.15);
+}
+
+
+/* Premium Sport Card Styles */
+.sport-card-premium {
+    position: relative;
+    background: linear-gradient(
+            135deg,
+            rgba(20, 25, 45, 0.9) 0%,
+            rgba(30, 35, 60, 0.8) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Gradient border glow effect */
+.sport-card-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+            135deg,
+            rgba(59, 130, 246, 0.5),
+            rgba(147, 51, 234, 0.5),
+            rgba(236, 72, 153, 0.5)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+/* Hover effects */
+.sport-card-premium:hover::before {
+    opacity: 1;
+}
+
+.sport-card-premium:hover {
+    transform: translateY(-8px);
+    box-shadow:
+            0 12px 48px rgba(0, 0, 0, 0.6),
+            0 0 40px rgba(59, 130, 246, 0.3);
+}
+
+/* Inner glow on hover */
+.sport-card-premium::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+            circle at 50% 0%,
+            rgba(59, 130, 246, 0.15),
+            transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.sport-card-premium:hover::after {
+    opacity: 1;
+}
+
+/* Bottom label gradient */
+.sport-card-premium > div:last-child {
+    background: linear-gradient(
+            to top,
+            rgba(10, 15, 30, 0.95) 0%,
+            rgba(20, 25, 45, 0.7) 100%
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

@@ -7,7 +7,7 @@ import GallerySection from "@/components/GallerySection";
 
 export default function HomePage() {
     return (
-        <main className="bg-gray-900 min-h-screen text-white">
+        <main className="min-h-screen text-white">
             <HeroSection />
             <AboutSection />
             <GallerySection />

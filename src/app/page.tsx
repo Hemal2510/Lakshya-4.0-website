@@ -1,34 +1,12 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Intro from "@/components/Intro";
-import HeroSection from "@/components/HeroSection";
+import IntroHero from "@/components/Intro";
 import AboutSection from "@/components/AboutSection";
 import GallerySection from "@/components/GallerySection";
-
-export default function SplashHome() {
-    const router = useRouter();
-
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, []);
-
-    function handleFinish() {
-        router.replace("/home"); // or your route
-    }
-
+export default function LandingPage() {
     return (
-        <Intro
-            videoSrc="/videos/intro.mp4"
-            logoSrc="/images/logo.png"
-            HeroComponent={HeroSection}
-            AboutComponent={AboutSection}
-            GalleryComponent={GallerySection}
-
-            onFinish={handleFinish}
-        />
+        <>
+            <IntroHero />
+            <AboutSection />
+            <GallerySection />
+        </>
     );
 }
