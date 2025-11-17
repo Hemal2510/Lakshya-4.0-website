@@ -1,9 +1,16 @@
-export default function EventsPage() {
-    return (
-        <main className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-4xl font-bold mb-4">Events Page</h1>
-            <p>This is the events page.</p>
-        </main>
 
-    );
+
+"use client";
+
+import PendulumTextReveal from "@/components/Pendulum";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+
+export default function SponsorsPage() {
+  return (
+    <main className="relative min-h-screen w-full overflow-x-hidden overflow-y-auto">
+
+      <PendulumTextReveal/>
+    </main>
+  );
 }
+

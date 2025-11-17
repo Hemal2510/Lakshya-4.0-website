@@ -66,7 +66,7 @@ const PendulumTextReveal: React.FC = () => {
   }, [letters.length]);
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br  bg-[#0f172a] flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div className="min-h-screen w-full bg-black flex flex-col items-center justify-center p-4 overflow-hidden">
       {/* Pendulum System */}
       <div className="relative w-full  max-w-2xl h-96 flex items-start justify-center">
         {/* Pendulum Pivot Point */}
@@ -75,25 +75,32 @@ const PendulumTextReveal: React.FC = () => {
         {/* Pendulum String - Connected to pivot and ball */}
         <div
           ref={stringRef}
-          className="absolute top-[-110] w-1 h-90 bg-gradient-to-b from-white/90 to-white/40 z-10"
+          className="absolute bg-gradient-to-b from-white/90 to-white/40 z-10"
           style={{
-            transformOrigin: 'top center',
+            top: "-110px",
+            width: "3px",
+            height: "360px",
+            transformOrigin: "top center",
           }}
         >
           {/* Fluid Glass Ball - Attached to the END of string */}
           <div
             ref={pendulumRef}
-            className="absolute top-90 w-36 h-36 rounded-full z-20 cursor-pointer -translate-x-1/2 -translate-y-1/2"
+            className="absolute rounded-full z-20 cursor-pointer"
             style={{
-              background: 'radial-gradient(circle at 30% 30%, rgba(120, 220, 255, 0.95), rgba(60, 140, 255, 0.8))',
+              top: "360px",
+              left: "50%",
+              width: "144px",
+              height: "144px",
+              transform: "translate(-50%, -50%)",
+              background: "radial-gradient(circle at 30% 30%, rgba(120, 220, 255, 0.95), rgba(60, 140, 255, 0.8))",
               boxShadow: `
                 inset 0 0 25px rgba(255, 255, 255, 0.7),
                 inset 0 0 50px rgba(100, 200, 255, 0.5),
                 0 0 80px rgba(80, 180, 255, 0.9),
                 0 0 120px rgba(60, 150, 255, 0.6)
               `,
-              filter: 'blur(0.5px)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              border: "1px solid rgba(255, 255, 255, 0.3)",
             }}
           >
             {/* Inner glow and reflection */}
@@ -141,46 +148,39 @@ const PendulumTextReveal: React.FC = () => {
          </div>
         
          {/* BUTTONS BELOW TEXT */}
-   <div className="mb-20 mt-14 flex justify-center items-center gap-60 w-screen">
-   
-   {/* SHARED BUTTON STYLE */}
-  <Link href="/events">
-    <button
-      className="
-        w-56                                /* SAME WIDTH FOR BOTH */
-        px-8 py-4 text-lg font-semibold rounded-xl
-        bg-gradient-to-br from-[#0a0f24] via-[#1b1440] to-[#3a2075]
-        text-[#b9d8ff]
-        border border-white/10
-        shadow-inner shadow-blue-900/40
-        hover:brightness-125 hover:scale-105
-        transition-all duration-300
-      "
-    >
+   {/* BUTTONS */}
+<div className="mb-20 mt-14 flex justify-center items-center gap-10 w-full">
+
+  {/* Solid White Button (Get Started Style) */}
+  <Link href="/legacy">
+    <button className="
+      w-56 px-8 py-4 text-lg font-semibold rounded-full
+      bg-white text-black
+      shadow-lg
+      hover:scale-105 hover:shadow-xl
+      transition-all duration-300
+    ">
       EXPLORE
     </button>
   </Link>
 
+  {/* Frosted Glass Outline Button */}
   <Link href="/home">
-    <button
-      className="
-        w-56                              
-        px-6 py-4 text-lg font-semibold rounded-xl
-        bg-gradient-to-br from-[#0e0a26] via-[#241046] to-[#532b8f]
-        text-[#e7c6ff]
-        border border-white/10
-        shadow-inner shadow-purple-900/40
-        hover:brightness-125 hover:scale-105
-        transition-all duration-300
-      "
-    >
+    <button className="
+      w-56 px-8 py-4 text-lg font-semibold rounded-full
+      border border-white/30
+      text-white/70
+      bg-white/5 backdrop-blur-md
+      shadow-inner
+      hover:text-white hover:border-white/60 hover:scale-105
+      transition-all duration-300
+    ">
       KNOW ABOUT US
     </button>
   </Link>
 
+</div>
 
-
- </div>
  </div>
   );
 };

@@ -7,7 +7,8 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 
 export default function SponsorsPage() {
   return (
-    <main className="relative flex flex-col items-center justify-center min-h-screen bg-black">
+    <main className="relative min-h-screen w-full overflow-x-hidden overflow-y-auto">
+
  
       <PendulumTextReveal/>
     </main>
