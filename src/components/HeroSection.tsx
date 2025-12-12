@@ -17,26 +17,29 @@ export default function HeroSection() {
                     <img
                         src={LAKSHYA_LOGO}
                         alt="Lakshya Logo"
-                        className="w-[28dc0px] md:w-[360px] lg:w-[420px] object-contain drop-shadow-2xl"
+                        className="w-[280px] md:w-[360px] lg:w-[420px] object-contain drop-shadow-2xl"
                     />
                 </div>
+
                 {/* Right: Everything else, vertically centered */}
                 <div className="flex flex-col justify-center items-center flex-1">
                     {/* LAKSHYA 4.0 at top, big */}
                     <div className="flex flex-col items-center">
-                        <span
-                            className="text-[2.8rem] sm:text-[5.1rem] md:text-[6.3rem] lg:text-[7.1rem] font-extrabold bg-clip-text text-transparent hero-gradient tracking-tight drop-shadow-lg whitespace-nowrap"
-                            style={{
-                                backgroundImage: 'linear-gradient(120deg, #38bdf8 15%, #6366f1 55%, #a78bfa 90%)',
-                                backgroundSize: '400% 400%',
-                                animation: 'waveGradient 4s ease-in-out infinite',
-                                lineHeight: 1.01
-                            }}
-                        >
-                        LAKSHYA 4.0
-                        </span>
+            <span
+                className="text-[2.8rem] sm:text-[5.1rem] md:text-[6.3rem] lg:text-[7.1rem] font-extrabold bg-clip-text text-transparent hero-gradient tracking-tight drop-shadow-lg whitespace-nowrap"
+                style={{
+                    backgroundImage:
+                        "linear-gradient(120deg, #38bdf8 15%, #6366f1 55%, #a78bfa 90%)",
+                    backgroundSize: "400% 400%",
+                    animation: "waveGradient 4s ease-in-out infinite",
+                    lineHeight: 1.01,
+                }}
+            >
+              LAKSHYA 4.0
+            </span>
                     </div>
-                    {/* Centered Defy the Odds */}
+
+                    {/* Centered Defy the Odds (typed) */}
                     <p
                         className="text-2xl sm:text-3xl md:text-4xl font-semibold italic text-blue-200 mt-6 mb-4 text-center"
                         style={{
@@ -48,11 +51,10 @@ export default function HeroSection() {
                                 "Defy the Odds",
                                 "Central India's largest sports fest",
                             ]}
-                            typingSpeed={75}
-                            deletingSpeed={50}
-                            pauseDuration={2000}
+                            typingSpeed={40}
+                            deletingSpeed={30}
+                            pauseDuration={1700}
                             showCursor={true}
-
                         />
                     </p>
 
@@ -71,14 +73,33 @@ export default function HeroSection() {
                             Event
                         </a>
                     </div>
+
+                    {/* Gallery button inside hero */}
+                    <div className="w-full flex justify-center md:justify-end px-4 mt-6">
+                        <a
+                            href="#gallery"
+                            className="inline-flex items-center gap-2
+                         rounded-full bg-blue-600/90 px-6 py-3
+                         text-sm sm:text-base font-semibold text-white
+                         shadow-lg shadow-blue-500/40
+                         hover:bg-blue-500 hover:shadow-blue-400/60
+                         hover:-translate-y-0.5 hover:scale-[1.02]
+                         border border-blue-400/60
+                         transition-all duration-1000"
+                        >
+                            View Gallery
+                            <span className="text-lg leading-none">↓</span>
+                        </a>
+                    </div>
                 </div>
+
                 <style>{`
-                    @keyframes waveGradient {
-                        0% { background-position: 0% 90%; }
-                        50% { background-position: 100% 10%; }
-                        100% { background-position: 0% 90%; }
-                    }
-                `}</style>
+          @keyframes waveGradient {
+            0% { background-position: 0% 90%; }
+            50% { background-position: 100% 10%; }
+            100% { background-position: 0% 90%; }
+          }
+        `}</style>
             </div>
         </section>
     );

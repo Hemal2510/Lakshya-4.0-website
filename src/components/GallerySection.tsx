@@ -15,7 +15,7 @@ export default function GallerySection() {
     const swiperRef = useRef<any>(null);
 
     return (
-        <div className="relative w-full max-w-screen-xl mx-auto m-16">
+        < section id="gallery" className="relative w-full max-w-screen-xl mx-auto m-16">
             {activeIdx === null && (
                 <Swiper
                     modules={[Navigation, Autoplay]}
@@ -55,6 +55,6 @@ export default function GallerySection() {
                     onClose={() => setActiveIdx(null)}
                 />
             )}
-        </div>
+        </section>
     );
 }
