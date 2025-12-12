@@ -86,7 +86,7 @@ export default function ExpandedSportModal({ sport, onClose }) {
                     bend={2.5}
                     textColor="transparent"
                     borderRadius={0.03}
-                    scrollSpeed={1.5}
+                    scrollSpeed={0.75}
                     scrollEase={0.08}
                 />
             </div>

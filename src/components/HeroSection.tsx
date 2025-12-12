@@ -1,5 +1,6 @@
 "use client";
 const LAKSHYA_LOGO = "/images/logo.png"; // Update as needed
+import TextType from "@/components/TextType";
 
 export default function HeroSection() {
     return (
@@ -39,11 +40,22 @@ export default function HeroSection() {
                     <p
                         className="text-2xl sm:text-3xl md:text-4xl font-semibold italic text-blue-200 mt-6 mb-4 text-center"
                         style={{
-                            textShadow: "0 2px 24px #38bdf8"
+                            textShadow: "0 2px 24px #38bdf8",
                         }}
                     >
-                        Defy the Odds
+                        <TextType
+                            text={[
+                                "Defy the Odds",
+                                "Central India's largest sports fest",
+                            ]}
+                            typingSpeed={75}
+                            deletingSpeed={50}
+                            pauseDuration={2000}
+                            showCursor={true}
+
+                        />
                     </p>
+
                     {/* Buttons group, large and centered directly below everything */}
                     <div className="flex justify-center gap-10 mt-4">
                         <a
