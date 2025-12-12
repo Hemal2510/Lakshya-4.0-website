@@ -70,19 +70,19 @@ export default function HeroSection() {
                             href="#events"
                             className="px-10 py-5 text-xl md:text-2xl rounded-xl font-bold text-blue-200 border-2 border-blue-400 bg-blue-400/10 hover:bg-blue-400/20 hover:text-white transition-all duration-300"
                         >
-                            Event
+                            Events
                         </a>
                     </div>
+                    
 
                     {/* Gallery button inside hero */}
-                    <div className="w-full flex justify-center md:justify-end px-4 mt-6">
+                    <div className="w-full flex justify-center md:justify-center px-4 mt-6 marginal-top:10px">
                         <a
                             href="#gallery"
                             className="inline-flex items-center gap-2
                          rounded-full bg-blue-600/90 px-6 py-3
                          text-sm sm:text-base font-semibold text-white
                          shadow-lg shadow-blue-500/40
-                         hover:bg-blue-500 hover:shadow-blue-400/60
                          hover:-translate-y-0.5 hover:scale-[1.02]
                          border border-blue-400/60
                          transition-all duration-1000"

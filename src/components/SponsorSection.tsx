@@ -41,7 +41,7 @@ export default function SponsorsSection() {
                     <div
                         className="flex"
                         style={{
-                            animation: "sponsor-slide-left 14s linear infinite",
+                            animation: "sponsor-slide-left 30s linear infinite",
                             width: "max-content",
                         }}
                     >
