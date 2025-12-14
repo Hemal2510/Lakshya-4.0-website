@@ -335,24 +335,12 @@ class Media {
         this.plane.rotation.z = Math.sign(x) * Math.asin(effectiveX / R);
       }
     }
-      // raw speed from scrolling
-      const rawSpeed = scroll.current - scroll.last;
 
-// 1) clamp it so spikes (like fast cursor moves) are limited
-      const maxSpeed = 0.3; // try 0.3, adjust up/down
-      const clampedSpeed = Math.max(-maxSpeed, Math.min(maxSpeed, rawSpeed));
+    this.speed = scroll.current - scroll.last;
+    this.program.uniforms.uTime.value += 0.04;
+    this.program.uniforms.uSpeed.value = this.speed;
 
-// 2) smooth it over time so it can’t change instantly
-      const smoothFactor = 0.15; // smaller = smoother/slower reaction
-      this.speed = lerp(this.speed, clampedSpeed, smoothFactor);
-
-// use the smoothed, clamped speed in the shader
-      this.program.uniforms.uTime.value += 0.04;
-      this.program.uniforms.uSpeed.value = this.speed;
-
-
-
-      const planeOffset = this.plane.scale.x / 2;
+    const planeOffset = this.plane.scale.x / 2;
     const viewportOffset = this.viewport.width / 2;
     this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
     this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
@@ -398,6 +386,7 @@ interface AppConfig {
 class App {
   container: HTMLElement;
   scrollSpeed: number;
+  baseAutoSpeed : number;
   scroll: {
     ease: number;
     current: number;
@@ -405,10 +394,7 @@ class App {
     last: number;
     position?: number;
   };
-    autoScrollEnabled: boolean = true;
-    baseAutoSpeed: number;
-
-    onCheckDebounce: (...args: any[]) => void;
+  onCheckDebounce: (...args: any[]) => void;
   renderer!: Renderer;
   gl!: GL;
   camera!: Camera;
@@ -445,8 +431,8 @@ class App {
     this.container = container;
     this.scrollSpeed = scrollSpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
-      this.baseAutoSpeed = scrollSpeed * 0.03;   // adjust 0.03 to tune speed
-      this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
+    this.baseAutoSpeed = scrollSpeed * 0.1;
+    this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
     this.createRenderer();
     this.createCamera();
     this.createScene();
@@ -457,17 +443,7 @@ class App {
     this.addEventListeners();
   }
 
-    setAutoScroll(enabled: boolean) {
-        this.autoScrollEnabled = enabled;
-        if (enabled) {
-            // reset last so the first frame after enabling has zero speed
-            this.scroll.last = this.scroll.current;
-        }
-    }
-
-
-
-    createRenderer() {
+  createRenderer() {
     this.renderer = new Renderer({
       alpha: true,
       antialias: true,
@@ -575,35 +551,27 @@ class App {
   }
 
     onTouchDown(e: MouseEvent | TouchEvent) {
-        // disable drag
+        // completely ignore drag
         this.isDown = false;
     }
 
     onTouchMove(e: MouseEvent | TouchEvent) {
-        // do nothing – no dragging
+        // do nothing – user drag has no effect
+        return;
+    }
+
+    onTouchUp() {
+        this.isDown = false;
+        // do NOT call this.onCheck();  // no snapping after drag
+    }
+
+    onWheel(e: Event) {
+        // ignore mouse wheel scrolling for this gallery
         return;
     }
 
 
-    onTouchUp() {
-    this.isDown = false;
-    this.onCheck();
-  }
-
-    onWheel(e: Event) {
-        const wheelEvent = e as WheelEvent;
-        const delta = wheelEvent.deltaY || (wheelEvent as any).wheelDelta || (wheelEvent as any).detail;
-
-        const step = (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
-        const maxStep = 1; // clamp per-wheel-step
-        const clampedStep = Math.max(-maxStep, Math.min(maxStep, step));
-
-        this.scroll.target += clampedStep;
-        this.onCheckDebounce();
-    }
-
-
-    onCheck() {
+  onCheck() {
     if (!this.medias || !this.medias[0]) return;
     const width = this.medias[0].width;
     const itemIndex = Math.round(Math.abs(this.scroll.target) / width);
@@ -628,17 +596,16 @@ class App {
       this.medias.forEach(media => media.onResize({ screen: this.screen, viewport: this.viewport }));
     }
   }
+
     update() {
-        // constant auto‑scroll when enabled
-        if (this.autoScrollEnabled) {
-            this.scroll.target += this.baseAutoSpeed;
-        }
+        // constant autoplay
+        this.scroll.target += this.baseAutoSpeed;
 
         this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
-        const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
+        const direction = this.scroll.current > this.scroll.last ? "right" : "left";
 
         if (this.medias) {
-            this.medias.forEach(media => media.update(this.scroll, direction));
+            this.medias.forEach((media) => media.update(this.scroll, direction));
         }
 
         this.renderer.render({ scene: this.scene, camera: this.camera });
@@ -682,52 +649,39 @@ class App {
 }
 
 interface CircularGalleryProps {
-    items?: { image: string; text: string }[];
-    bend?: number;
-    textColor?: string;
-    borderRadius?: number;
-    font?: string;
-    scrollSpeed?: number;
-    scrollEase?: number;
+  items?: { image: string; text: string }[];
+  bend?: number;
+  textColor?: string;
+  borderRadius?: number;
+  font?: string;
+  scrollSpeed?: number;
+  scrollEase?: number;
 }
 
 export default function CircularGallery({
-                                            items,
-                                            bend = 3,
-                                            textColor = '#ffffff',
-                                            borderRadius = 0.05,
-                                            font = 'bold 30px Figtree',
-                                            scrollSpeed = 1,
-                                            scrollEase = 0.05
-                                        }: CircularGalleryProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const appRef = useRef<App | null>(null);
-
-    useEffect(() => {
-        if (!containerRef.current) return;
-        const app = new App(containerRef.current, {
-            items,
-            bend,
-            textColor,
-            borderRadius,
-            font,
-            scrollSpeed,
-            scrollEase
-        });
-        appRef.current = app;
-
-        return () => {
-            app.destroy();
-            appRef.current = null;
-        };
-    }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
-
-    return (
-        <div
-            className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing circular-gallery-container"
-            ref={containerRef}
-            onMouseEnter={() => appRef.current?.setAutoScroll(false)}
-            onMouseLeave={() => appRef.current?.setAutoScroll(true)}
-        />
-    );
+  items,
+  bend = 3,
+  textColor = '#ffffff',
+  borderRadius = 0.05,
+  font = 'bold 30px Figtree',
+  scrollSpeed = 2,
+  scrollEase = 0.05
+}: CircularGalleryProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const app = new App(containerRef.current, {
+      items,
+      bend,
+      textColor,
+      borderRadius,
+      font,
+      scrollSpeed,
+      scrollEase
+    });
+    return () => {
+      app.destroy();
+    };
+  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+  return <div className="w-full h-full overflow-hidden " ref={containerRef} />;
 }

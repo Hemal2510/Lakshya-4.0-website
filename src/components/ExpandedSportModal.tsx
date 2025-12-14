@@ -1,85 +1,54 @@
 "use client";
-import { useEffect, useRef } from "react";
+
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import CircularGallery from "@/components/CircularGallery";
 
-export default function ExpandedSportModal({ sport, onClose }) {
-    const autoScrollRef = useRef(null);
+interface ExpandedSportModalProps {
+    sport: {
+        name: string;
+        photos: string[];
+    };
+    onClose: () => void;
+}
 
+export default function ExpandedSportModal({
+                                               sport,
+                                               onClose,
+                                           }: ExpandedSportModalProps) {
     useEffect(() => {
         document.body.style.overflow = "hidden";
-        return () => { document.body.style.overflow = ""; };
-    }, []);
-
-    // Auto-scroll effect
-    useEffect(() => {
-        let scrollAmount = 0;
-        const autoScroll = setInterval(() => {
-            scrollAmount += 0.5; // Speed of auto-scroll (adjust as needed)
-
-            // Trigger a wheel event to scroll the gallery
-            const container = document.querySelector('.circular-gallery-container');
-            if (container) {
-                const event = new WheelEvent('wheel', {
-                    deltaY: 1,
-                    bubbles: true,
-                    cancelable: true
-                });
-                container.dispatchEvent(event);
-            }
-        }, 30); // Frequency (lower = faster)
-
-        autoScrollRef.current = autoScroll;
-
-        // Pause on hover
-        const container = document.querySelector('.circular-gallery-container');
-        if (container) {
-            container.addEventListener('mouseenter', () => {
-                clearInterval(autoScrollRef.current);
-            });
-            container.addEventListener('mouseleave', () => {
-                autoScrollRef.current = setInterval(() => {
-                    const event = new WheelEvent('wheel', {
-                        deltaY: 1,
-                        bubbles: true,
-                        cancelable: true
-                    });
-                    container.dispatchEvent(event);
-                }, 30);
-            });
-        }
-
         return () => {
-            if (autoScrollRef.current) {
-                clearInterval(autoScrollRef.current);
-            }
+            document.body.style.overflow = "";
         };
     }, []);
 
     const galleryItems = sport.photos.map((photo) => ({
         image: photo,
-        text: ""
+        text: "",
     }));
 
     return createPortal(
         <div
-            className="fixed top-0 left-0 right-0 bottom-0 z-[9999] h-screen w-screen flex flex-col justify-center items-center backdrop-blur-lg"
-            style={{ margin: 0, padding: 0 }}
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center backdrop-blur-lg bg-black/70"
         >
-            <div className="w-full text-center font-bold text-5xl text-white mb-8" style={{ zIndex: 10 }}>
+            {/* Title */}
+            <div className="w-full text-center font-bold text-4xl sm:text-5xl text-white mb-8 z-10">
                 {sport.name}
             </div>
 
+            {/* Close button */}
             <button
                 onClick={onClose}
-                className="absolute top-8 right-8 text-white text-3xl font-bold z-20"
+                className="absolute top-6 right-6 text-white text-3xl font-bold z-20"
+                aria-label="Close"
             >
                 &times;
             </button>
 
+            {/* Circular gallery container */}
             <div
-                className="circular-gallery-container"
-                style={{ height: '600px', width: '90vw', maxWidth: '1400px', position: 'relative' }}
+                className="w-[90vw] max-w-[1400px] h-[60vh] sm:h-[65vh] relative"
             >
                 <CircularGallery
                     items={galleryItems}
