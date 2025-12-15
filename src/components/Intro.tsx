@@ -119,7 +119,7 @@ export default function IntroHero() {
                                 Event
                             </a>
                         </div>
-                        <div className="w-full flex justify-center md:justify-end px-4 mt-6">
+                        <div className="w-full flex justify-center md:justify-center px-4 mt-6">
                             <a
                                 href="#gallery"
                                 className="inline-flex items-center gap-2

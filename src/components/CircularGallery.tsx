@@ -431,7 +431,7 @@ class App {
     this.container = container;
     this.scrollSpeed = scrollSpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
-    this.baseAutoSpeed = scrollSpeed * 0.1;
+    this.baseAutoSpeed = scrollSpeed * 0.06;
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
     this.createRenderer();
     this.createCamera();
