@@ -93,16 +93,23 @@ export default function SportCard({
             onMouseLeave={handleMouseLeave}
             onMouseMove={handleMouseMove}
             onClick={onCardClick}
-            className="group cursor-pointer rounded-3xl flex flex-col justify-between
-                       h-[420px] w-[420px] overflow-hidden transition-all duration-500
-                       bg-gradient-to-br from-white/10 via-white/5 to-blue-800/40
-                       backdrop-blur-xl border border-white/10
-                       shadow-2xl shadow-black/30 hover:shadow-3xl hover:shadow-cyan-500/20
-                       relative before:absolute before:inset-0 before:rounded-3xl
-                       before:bg-gradient-to-r before:from-cyan-500/5 before:to-purple-500/5
-                       before:opacity-0 before:transition-all before:duration-500
-                       before:group-hover:opacity-100
-                       transform-gpu m-8 p-6"
+            className="
+  group cursor-pointer rounded-3xl flex flex-col justify-between
+  h-[350px] w-[360px]          /* base: small phones */
+  sm:h-[420px] sm:w-[300px]    /* >=640px */
+  md:h-[420px] md:w-[360px]    /* >=768px */
+  lg:h-[420px] lg:w-[420px]    /* >=1024px (laptops) */
+  overflow-hidden transition-all duration-500
+  bg-gradient-to-br from-white/10 via-white/5 to-blue-800/40
+  backdrop-blur-xl border border-white/10
+  shadow-2xl shadow-black/30 hover:shadow-3xl hover:shadow-cyan-500/20
+  relative before:absolute before:inset-0 before:rounded-3xl
+  before:bg-gradient-to-r before:from-cyan-500/5 before:to-purple-500/5
+  before:opacity-0 before:transition-all before:duration-500
+  before:group-hover:opacity-100
+  transform-gpu m-4 sm:m-6 lg:m-8 p-4 sm:p-5 lg:p-6
+"
+
             style={{
                 minWidth: 320,
                 transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`,

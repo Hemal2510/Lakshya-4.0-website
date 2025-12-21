@@ -15,15 +15,22 @@ export default function GallerySection() {
     const swiperRef = useRef<any>(null);
 
     return (
-        < section id="gallery" className="relative w-full max-w-screen-xl mx-auto m-16">
+        < section id="gallery" className="relative w-full max-w-screen-xl mx-auto m-32">
             {activeIdx === null && (
                 <Swiper
                     modules={[Navigation, Autoplay]}
                     centeredSlides
-                    slidesPerView={3}
+                    breakpoints={{
+                        0: { slidesPerView: 1 },      // phones
+                        640: { slidesPerView: 1 },    // small phones / small tablets
+                        768: { slidesPerView: 2 },    // tablets
+                        1240: { slidesPerView: 2},
+                        1400 : { slidesPerView: 3 },
+                        // laptops and up
+                    }}
                     spaceBetween={40}
                     loop={true}
-                    navigation
+                    navigationcd
                     autoplay={{ delay: 2000, disableOnInteraction: false }}
                     className="pb-12"
                     onSwiper={swiper => (swiperRef.current = swiper)}
