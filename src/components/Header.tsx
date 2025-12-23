@@ -18,20 +18,19 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 
-                       w-[92%] md:w-[80%] lg:w-[65%] 
-                       bg-white/5 backdrop-blur-xl 
-                       border border-white/10 
-                       rounded-full shadow-lg shadow-black/40 
-                       px-6 py-2"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50
+                 w-[92%] md:w-[80%] lg:w-[65%]
+                 bg-white/5 backdrop-blur-xl
+                 border border-white/10
+                 rounded-2xl md:rounded-full shadow-lg shadow-black/40
+                 px-6 py-2"
         >
             <div className="flex items-center justify-between h-14">
-
                 {/* Brand / Logo */}
                 <Link href="/home" className="flex items-center gap-2 group">
-                    <span className="relative text-xl font-semibold text-white tracking-wide">
-                        LAKSHYA
-                    </span>
+          <span className="relative text-xl font-semibold text-white tracking-wide">
+            LAKSHYA
+          </span>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -43,7 +42,7 @@ export default function Navbar() {
                             className="relative text-gray-300 hover:text-white transition-all duration-300 font-medium group"
                         >
                             {link.name}
-                            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-300"></span>
+                            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-300" />
                         </Link>
                     ))}
 
@@ -64,9 +63,19 @@ export default function Navbar() {
                 >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {isOpen ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                            />
                         ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
                         )}
                     </svg>
                 </button>
@@ -74,20 +83,35 @@ export default function Navbar() {
 
             {/* Mobile Dropdown */}
             {isOpen && (
-                <div className="md:hidden flex flex-col gap-4 py-4 text-center border-t border-white/10 mt-2">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={() => setIsOpen(false)}
-                            className="text-gray-300 hover:text-white transition font-medium"
+                <div className="md:hidden mt-3">
+                    <div
+                        className="
+              w-full rounded-3xl bg-slate-900/95 border border-white/10
+              shadow-2xl shadow-black/60
+              px-5 py-4 flex flex-col gap-3 text-center
+            "
+                    >
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                onClick={() => setIsOpen(false)}
+                                className="py-2 text-gray-200 hover:text-white hover:bg-white/5 rounded-2xl transition font-medium"
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+
+                        <button
+                            className="
+                mt-2 w-full px-6 py-3 rounded-2xl
+                bg-white text-black font-semibold
+                shadow-md hover:bg-white/90 transition
+              "
                         >
-                            {link.name}
-                        </Link>
-                    ))}
-                    <button className="w-full px-6 py-2 rounded-full bg-white text-black font-semibold shadow-md">
-                        Register
-                    </button>
+                            Register
+                        </button>
+                    </div>
                 </div>
             )}
         </motion.nav>
