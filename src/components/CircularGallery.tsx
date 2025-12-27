@@ -438,7 +438,7 @@ class App {
             textColor = '#ffffff',
             borderRadius = 0,
             font = 'bold 30px Figtree',
-            scrollSpeed = 2,
+            scrollSpeed = 3,
             scrollEase = 0.05
         }: AppConfig
     ) {
@@ -447,7 +447,7 @@ class App {
         this.scrollSpeed = scrollSpeed;
         this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
         const isSmallScreen = window.innerWidth < 768; // phones & small tabs
-        this.baseAutoSpeed = scrollSpeed * (isSmallScreen ? 0.06 : 0.1);
+        this.baseAutoSpeed = scrollSpeed * (isSmallScreen ? 0.06: 0.1);
         this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
         this.createRenderer();
         this.createCamera();
@@ -686,7 +686,7 @@ export default function CircularGallery({
                                             textColor = '#ffffff',
                                             borderRadius = 0.05,
                                             font = 'bold 30px Figtree',
-                                            scrollSpeed = 2,
+                                            scrollSpeed = 3,
                                             scrollEase = 0.05
                                         }: CircularGalleryProps) {
     const containerRef = useRef<HTMLDivElement>(null);

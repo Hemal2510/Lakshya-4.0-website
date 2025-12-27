@@ -125,7 +125,7 @@ function TimelineYearBlock({
                                right,
                            }: any) {
     const controls = useAnimation();
-    const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
+    const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
 
     useEffect(() => {
         if (inView) controls.start({ opacity: 1, x: 0, scale: 1 });
@@ -154,21 +154,12 @@ function TimelineYearBlock({
                 <div className="absolute -inset-8 rounded-full bg-blue-500/35 blur-xl" />
             </motion.div>
 
-            {/* MOBILE: always Card -> Video */}
+            {/* MOBILE: always Card -> Video, no inView dependency */}
             <div className="flex flex-col gap-6 md:hidden">
                 <div className="flex justify-center relative">
-                    <motion.div
-                        ref={ref}
-                        initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                        animate={controls}
-                        transition={{ duration: 0.7, ease: "backOut" }}
-                        className="group relative w-full max-w-md"
-                    >
+                    <div className="group relative w-full max-w-md">
                         <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-600/40 via-indigo-700/30 to-blue-800/40 rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition-all duration-500" />
-                        <motion.div
-                            whileHover={{ y: -6 }}
-                            className="relative bg-gray-900/60 backdrop-blur-xl rounded-2xl px-5 py-6 border border-white/10 group-hover:border-blue-400/50 transition-all duration-300"
-                        >
+                        <div className="relative bg-gray-900/60 backdrop-blur-xl rounded-2xl px-5 py-6 border border-white/10 group-hover:border-blue-400/50 transition-all duration-300">
                             <TimelineCard
                                 year={year}
                                 title={title}
@@ -176,11 +167,11 @@ function TimelineYearBlock({
                                 desc={desc}
                                 highlights={highlights}
                                 special={special}
-                                inView={inView}
+                                inView={true}
                                 right={false}
                             />
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex justify-center relative">
@@ -188,7 +179,7 @@ function TimelineYearBlock({
                 </div>
             </div>
 
-            {/* DESKTOP/TABLET: alternating sides */}
+            {/* DESKTOP/TABLET: alternating sides with inView animations */}
             <div className="hidden md:grid grid-cols-2 gap-12 items-center w-full">
                 {!right ? (
                     <>
@@ -302,7 +293,6 @@ function TimelineCard({
                       }: any) {
     return (
         <>
-            {/* Year badge – closer on mobile */}
             <motion.div
                 initial={{ scale: 0.5, rotate: -20, opacity: 0 }}
                 animate={inView ? { scale: 1, rotate: 0, opacity: 1 } : {}}
