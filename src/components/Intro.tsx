@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TextType from "@/components/TextType";
+import Head from "next/head";
 
 const LAKSHYA_LOGO = "/images/logo.png";
-const VIDEO_SRC = "/videos/intro.mp4";
+const VIDEO_SRC =
+  `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}/lakshya/intro.mp4`;
 
 export default function IntroHero() {
     const [videoDone, setVideoDone] = useState(false);
@@ -33,7 +35,17 @@ export default function IntroHero() {
     }, [videoDone]);
 
     return (
+        <>
+           <Head>
+        <link
+          rel="preload"
+          href={VIDEO_SRC}
+          as="video"
+          type="video/mp4"
+        />
+      </Head>
         <div className="relative w-full min-h-screen overflow-hidden">
+            
             {/* Intro video overlay */}
             <AnimatePresence>
                 {!videoDone && (
@@ -170,5 +182,6 @@ export default function IntroHero() {
         `}</style>
             </motion.section>
         </div>
+        </>
     );
 }
