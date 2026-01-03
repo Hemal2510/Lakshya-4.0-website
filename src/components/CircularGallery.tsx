@@ -303,7 +303,9 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         window.addEventListener("resize", resize);
 
         let scroll = { current: 0, target: 0 };
-        const baseSpeed = 0.05;
+        const isMobile = window.innerWidth < 768;
+        const baseSpeed = isMobile ? 0.08 : 0.05;
+
         const ease = 0.05;
 
         const loop = () => {

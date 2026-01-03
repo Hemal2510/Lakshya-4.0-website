@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import CircularGallery from "@/components/CircularGallery";
+import imageKitLoader from "@/lib/imagekitLoader";
 
 interface ExpandedSportModalProps {
     sport: {
@@ -16,6 +17,8 @@ export default function ExpandedSportModal({
                                                sport,
                                                onClose,
                                            }: ExpandedSportModalProps) {
+
+    /* Lock background scroll */
     useEffect(() => {
         document.body.style.overflow = "hidden";
         return () => {
@@ -23,15 +26,20 @@ export default function ExpandedSportModal({
         };
     }, []);
 
-    const galleryItems = sport.photos.map((photo) => ({
-        image: photo,
-        text: "",
-    }));
+    /* 🔥 Generate ImageKit URLs ONLY when modal opens */
+    const galleryItems = useMemo(() => {
+        return sport.photos.map((photo) => ({
+            image: imageKitLoader({
+                src: photo,
+                width: 1200,   // good balance for large gallery
+                quality: 80,   // visually clean, bandwidth-safe
+            }),
+            text: "",
+        }));
+    }, [sport.name]);
 
     return createPortal(
-        <div
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center backdrop-blur-lg bg-black/70"
-        >
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center backdrop-blur-lg bg-black/70">
             {/* Title */}
             <div className="w-full text-center font-bold text-4xl sm:text-5xl text-white mb-8 z-10">
                 {sport.name}
@@ -47,9 +55,7 @@ export default function ExpandedSportModal({
             </button>
 
             {/* Circular gallery container */}
-            <div
-                className="w-[90vw] max-w-[1400px] h-[60vh] sm:h-[65vh] relative"
-            >
+            <div className="w-[90vw] max-w-[1400px] h-[60vh] sm:h-[65vh] relative">
                 <CircularGallery
                     items={galleryItems}
                     bend={2.5}
