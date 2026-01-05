@@ -43,10 +43,16 @@ export default function AboutUsSplitCarousel() {
     }, AUTO_PLAY_INTERVAL);
   };
 
-  useEffect(() => {
-    resetTimer();
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+useEffect(() => {
+  resetTimer();
+
+  return () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+  };
+}, []);
+
 
   const nextPhoto = () => {
     setDirection("down");
