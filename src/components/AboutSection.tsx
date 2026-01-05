@@ -125,8 +125,8 @@ export default function AboutUsSplitCarousel() {
 
         <div className="flex gap-10 justify-center">
           <StatCircle value="2500+" label="Participants" />
-          <StatCircle value="15+" label="Sports" />
-          <StatCircle value="50+" label="Colleges" />
+          <StatCircle value="12+" label="Sports" />
+          <StatCircle value="50+" label="Institutes" />
         </div>
       </div>
     </section>

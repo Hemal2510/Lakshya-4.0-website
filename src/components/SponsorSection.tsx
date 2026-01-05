@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import imageKitLoader from "@/lib/imagekitLoader";
 
@@ -22,22 +23,37 @@ const SPONSOR_LOGOS = [
 export default function SponsorsSection() {
   const loopLogos = [...SPONSOR_LOGOS, ...SPONSOR_LOGOS];
 
+  /* 🔥 OPTIONAL but recommended:
+     Warm browser cache once on page load */
+  useEffect(() => {
+    SPONSOR_LOGOS.forEach((src) => {
+      const img = new window.Image();
+
+      img.src = imageKitLoader({
+        src,
+        width: 160,
+        quality: 80,
+      });
+    });
+  }, []);
+
   return (
     <section id="sponsors" className="w-full mt-48">
       <div className="mx-auto px-4">
         <h2 className="text-center text-2xl sm:text-3xl font-semibold text-slate-100">
           Previous Sponsors
         </h2>
+
         <p className="text-center text-sm text-slate-400 mb-8">
           A glimpse of the brands that have powered Lakshya.
         </p>
 
         <div className="relative overflow-hidden py-6">
-          {/* side fade */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-slate-950 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-slate-950 to-transparent" />
+          {/* Side fade */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-slate-950 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-slate-950 to-transparent z-10" />
 
-          {/* moving row */}
+          {/* Moving row */}
           <div
             className="flex"
             style={{

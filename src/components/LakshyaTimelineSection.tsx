@@ -11,26 +11,23 @@ const years = [
         motto: "Breaking Barriers",
         desc: "The inaugural edition that set the foundation.",
         highlights: ["500+ participants", "10 sports categories", "Regional recognition"],
-        special: "First ever inter-college championship",
         video: "",
     },
     {
         year: 2023,
         title: "Lakshya 2.0 – Evolution",
-        motto: "Raising the Bar",
+        motto: "Embrace The Chase",
         desc: "Expanded reach and enhanced competition.",
         highlights: ["800+ participants", "12 sports categories", "State-level participation"],
-        special: "Record breaking attendance",
         video:
             "https://drive.google.com/uc?export=download&id=1LuhJOn6NUEb9BRXDpNfvdsXHWsgrv9FO",
     },
     {
         year: 2024,
         title: "Lakshya 3.0 – Excellence",
-        motto: "Unleash the Spirit",
+        motto: "Ignite The Spirit",
         desc: "Setting new standards in collegiate sports.",
-        highlights: ["1200+ participants", "15 sports categories", "National recognition"],
-        special: "Most competitive edition",
+        highlights: ["1200+ participants", "13 sports categories","Most competitive edition"],
         video:
             "https://drive.google.com/uc?export=download&id=1suIvB7iSRFpDtBskBFSiNd8RABcUlLqP",
     },
@@ -120,7 +117,6 @@ function TimelineYearBlock({
                                motto,
                                desc,
                                highlights,
-                               special,
                                video,
                                right,
                            }: any) {
@@ -166,7 +162,6 @@ function TimelineYearBlock({
                                 motto={motto}
                                 desc={desc}
                                 highlights={highlights}
-                                special={special}
                                 inView={true}
                                 right={false}
                             />
@@ -220,7 +215,6 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                        special={special}
                                         inView={inView}
                                         right={false}
                                     />
@@ -256,7 +250,6 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                        special={special}
                                         inView={inView}
                                         right={true}
                                     />
@@ -287,7 +280,6 @@ function TimelineCard({
                           motto,
                           desc,
                           highlights,
-                          special,
                           inView,
                           right,
                       }: any) {
@@ -336,9 +328,6 @@ function TimelineCard({
                 ))}
             </ul>
 
-            <div className="bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm text-blue-300 font-medium shadow-inner">
-                ✨ {special}
-            </div>
         </>
     );
 }

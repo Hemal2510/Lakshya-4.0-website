@@ -83,27 +83,21 @@ export default function Footer() {
                         <div className="font-bold mb-4 text-lg text-white">
                             Contact For Events
                         </div>
-                        <div className="font-semibold text-blue-300">Name 1</div>
-                        <div className="mb-3 text-sm text-gray-300">+91 XXXXXXXX</div>
-                        <div className="font-semibold text-blue-300">Name 2</div>
-                        <div className="mb-2 text-sm text-gray-300">+91 XXXXXXXX</div>
+                        <div className="font-semibold text-blue-300">Samarth Sharma (Public Relations Manager)</div>
+                        <div className="mb-3 text-sm text-gray-300">+91 8928088784</div>
+                        <div className="font-semibold text-blue-300">Sajal Jain (Accomodation Manager)</div>
+                        <div className="mb-2 text-sm text-gray-300">+91 9140222151</div>
                     </div>
 
                     {/* Column 3: Phone & Socials */}
                     <div>
                         <div className="font-bold mb-4 text-lg text-white">Phone</div>
-                        <div className="mb-1 text-sm text-gray-300">
-                            Contact 1:{" "}
-                            <span className="text-blue-300 font-medium">
-                +91 XXXXXXXXXX
-              </span>
+                        <div className="font-semibold text-blue-300">Jagrit (Overall Coordinator):{" "}</div>
+                        <div className="mb-3 text-sm text-gray-300"> +91 6280259964 </div>
+                        <div className="font-semibold text-blue-300">
+                            Nishant Bhalani (Events Manager):{" "}
                         </div>
-                        <div className="mb-4 text-sm text-gray-300">
-                            Contact 2:{" "}
-                            <span className="text-blue-300 font-medium">
-                +91 XXXXXXXXXX
-              </span>
-                        </div>
+                        <div className="mb-3 text-sm text-gray-300"> +91 9586353536 </div>
 
                         <div className="font-bold mb-4 text-lg text-white">Follow Us</div>
                         <div className="flex gap-5">
@@ -135,9 +129,7 @@ export default function Footer() {
                         &copy; 2025 Lakshya IIT Indore. All Rights Reserved.
                     </div>
 
-                    <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full shadow-lg font-semibold transition-all hover:scale-105 hover:shadow-purple-500/50 flex items-center">
-                        <span className="mr-2">🎟️</span> Fest Pass
-                    </button>
+                    
                 </div>
             </div>
         </footer>

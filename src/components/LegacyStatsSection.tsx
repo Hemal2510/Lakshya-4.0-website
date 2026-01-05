@@ -24,7 +24,7 @@ const stats = [
     },
     {
         icon: BoltIcon,
-        count: 15,
+        count: 12,
         label: "Sports Categories",
         desc: "Different sports and cultural categories",
         suffix: "+",
@@ -32,8 +32,8 @@ const stats = [
     {
         icon: TrophyIcon,
         count: 50,
-        label: "Winning Colleges",
-        desc: "Colleges that have participated and won",
+        label: "Winning Institutes",
+        desc: "Institutes that have participated and won",
         suffix: "+",
     },
 ];

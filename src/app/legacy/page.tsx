@@ -16,7 +16,7 @@ export default function LegacyPage() {
                     <path fill="url(#SectionFadeDivider)" d="M0,0 C600,95 900,5 1440,80 L1440,80 L0,80 Z" />
                 </svg>
             </div>
-            <AchievementsSection/>
+            {/* <AchievementsSection/> */}
         </main>
     );
 }
