@@ -315,3 +315,39 @@
         transform: translateX(-50%);
     }
 }
+
+
+
+
+/* For Spotlight effect on title sponsor*/
+
+@import "tailwindcss";
+
+@theme inline {
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 2;
+    transform: translate(-53%, -43%) scale(3.8);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
