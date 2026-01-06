@@ -4,8 +4,6 @@ import { motion, useAnimation } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
 
-const IMAGEKIT_BASE = `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`;
-
 const years = [
     {
         year: 2022,
@@ -14,7 +12,7 @@ const years = [
         desc: "The inaugural edition that set the foundation.",
         highlights: ["500+ participants", "10 sports categories", "Regional recognition"],
         special: "First ever inter-college championship",
-        video:`${IMAGEKIT_BASE}/lakshya/videos/lakshya1.mp4`,
+        video: "",
     },
     {
         year: 2023,
@@ -23,7 +21,8 @@ const years = [
         desc: "Expanded reach and enhanced competition.",
         highlights: ["800+ participants", "12 sports categories", "State-level participation"],
         special: "Record breaking attendance",
-        video: `${IMAGEKIT_BASE}/lakshya/videos/lakshya2.mp4`,
+        video:
+            "https://drive.google.com/uc?export=download&id=1LuhJOn6NUEb9BRXDpNfvdsXHWsgrv9FO",
     },
     {
         year: 2024,
@@ -32,7 +31,8 @@ const years = [
         desc: "Setting new standards in collegiate sports.",
         highlights: ["1200+ participants", "15 sports categories", "National recognition"],
         special: "Most competitive edition",
-        video: `${IMAGEKIT_BASE}/lakshya/videos/lakshya3.mp4`,
+        video:
+            "https://drive.google.com/uc?export=download&id=1suIvB7iSRFpDtBskBFSiNd8RABcUlLqP",
     },
 ];
 
@@ -93,6 +93,17 @@ export default function LakshyaTimelineSection() {
             </div>
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 z-10">
+                {/* Central timeline line – only md+ */}
+                <div className="hidden md:block absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 overflow-hidden z-0">
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-b from-blue-400 via-indigo-500 to-blue-600"
+                        animate={{ backgroundPosition: ["0% 0%", "0% 100%", "0% 0%"] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                        style={{ backgroundSize: "100% 200%" }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-blue-400 via-indigo-500 to-blue-600 opacity-50 blur-sm" />
+                </div>
+
                 <div className="flex flex-col gap-20 md:gap-32 relative z-10">
                     {years.map((event, idx) => (
                         <TimelineYearBlock {...event} key={event.year} right={idx % 2 === 1} />
@@ -102,8 +113,6 @@ export default function LakshyaTimelineSection() {
         </section>
     );
 }
-
-/* REST OF YOUR FILE IS 100% UNCHANGED BELOW */
 
 function TimelineYearBlock({
                                year,

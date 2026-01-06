@@ -304,7 +304,7 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
 
         let scroll = { current: 0, target: 0 };
         const isMobile = window.innerWidth < 768;
-        const baseSpeed = isMobile ? 0.08 : 0.05;
+        const baseSpeed = isMobile ? 0.1 : 0.07;
 
         const ease = 0.05;
 

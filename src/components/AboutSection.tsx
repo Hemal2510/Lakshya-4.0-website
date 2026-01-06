@@ -43,10 +43,16 @@ export default function AboutUsSplitCarousel() {
     }, AUTO_PLAY_INTERVAL);
   };
 
-  useEffect(() => {
-    resetTimer();
-    return () => timerRef.current && clearInterval(timerRef.current);
-  }, []);
+useEffect(() => {
+  resetTimer();
+
+  return () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+  };
+}, []);
+
 
   const nextPhoto = () => {
     setDirection("down");
@@ -125,8 +131,8 @@ export default function AboutUsSplitCarousel() {
 
         <div className="flex gap-10 justify-center">
           <StatCircle value="2500+" label="Participants" />
-          <StatCircle value="15+" label="Sports" />
-          <StatCircle value="50+" label="Colleges" />
+          <StatCircle value="12+" label="Sports" />
+          <StatCircle value="50+" label="Institutes" />
         </div>
       </div>
     </section>
