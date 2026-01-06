@@ -5,12 +5,14 @@ import { sportsGallery } from "@/data/sportsGallery";
 import SportCard from "@/components/SportsCard";
 import GallerySection from "@/components/GallerySection";
 import SponsorsSection from "@/components/SponsorSection";
+import ResourcesSection from "@/components/Resource";
 
 export default function HomePage() {
     return (
         <main className="min-h-screen text-white">
             <HeroSection />
             <AboutSection />
+            <ResourcesSection />
             <SponsorsSection />
             <GallerySection />
 

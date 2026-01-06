@@ -315,3 +315,29 @@
         transform: translateX(-50%);
     }
 }
+
+@keyframes buttonSweep {
+    0% {
+        transform: translateX(-120%) rotate(12deg);
+        opacity: 0;
+    }
+    35% {
+        opacity: 0.35;
+    }
+    100% {
+        transform: translateX(120%) rotate(12deg);
+        opacity: 0;
+    }
+}
+
+/* Idle animation */
+.animate-buttonSweep {
+    animation: buttonSweep 3.2s linear infinite;
+}
+
+/* Faster + brighter on hover */
+.group:hover .animate-buttonSweep {
+    animation-duration: 1.4s;
+    opacity: 0.6;
+}
+
