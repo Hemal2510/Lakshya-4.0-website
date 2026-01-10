@@ -43,6 +43,7 @@ class Media {
     baseW = 0;
     baseH = 0;
     maxZoom = 1.6;
+    imageAspect: number = 1; // 👈 ADD THIS
 
     constructor({
                     gl,
@@ -94,11 +95,22 @@ class Media {
                 }
 
                 void main() {
-                    vec2 ratio = vec2(
-                        min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-                        min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-                    );
+                 vec2 planeRatio = vec2(uPlaneSizes.x / uPlaneSizes.y, 1.0);
+                    vec2 imageRatio = vec2(uImageSizes.x / uImageSizes.y, 1.0);
+
+                    float r = planeRatio.x / imageRatio.x;
+
+                    vec2 ratio;
+                    if (r > 1.0) {
+                        // plane is wider → scale by height
+                        ratio = vec2(1.0 / r, 1.0);
+                    } else {
+                        // plane is taller → scale by width
+                        ratio = vec2(1.0, r);
+                    }
+
                     vec2 uv = vUv * ratio + (1.0 - ratio) * 0.5;
+
 
                     vec4 color = texture2D(tMap, uv);
                     float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
@@ -123,12 +135,15 @@ class Media {
         img.crossOrigin = "anonymous";
         img.src = image;
         img.onload = () => {
-            texture.image = img;
-            this.program.uniforms.uImageSizes.value = [
-                img.naturalWidth,
-                img.naturalHeight,
-            ];
-        };
+  texture.image = img;
+  const iw = img.naturalWidth;
+  const ih = img.naturalHeight;
+
+  this.program.uniforms.uImageSizes.value = [iw, ih];
+
+  // store image aspect
+  this.imageAspect = iw / ih;
+};
 
         const { texture: textTex } = createTextTexture(gl, text, font, textColor);
         const textProg = new Program(gl, {
@@ -162,11 +177,14 @@ class Media {
         // ---- RELATIVE / PERCENTAGE-BASED FORMULATION ----
 
         const widthRatio = isMobile ? 0.72 : 0.42;
-        const aspectRatio = 1.35;
+        const aspectRatio = this.imageAspect || 1.35;
+
+
         const heightLimitRatio = isMobile ? 0.75 : 0.65;
 
         let baseW = viewport.width * widthRatio;
-        let baseH = baseW * aspectRatio;
+        let baseH = baseW / aspectRatio;
+        // let baseH = baseW * aspectRatio;
 
         const maxH = viewport.height * heightLimitRatio;
         if (baseH > maxH) {

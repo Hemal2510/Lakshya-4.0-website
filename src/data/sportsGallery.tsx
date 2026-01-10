@@ -101,7 +101,6 @@ export const sportsGallery = [
             "/lakshya/gallery/water_sport/water2.jpg",
             "/lakshya/gallery/water_sport/water3.jpg",
             "/lakshya/gallery/water_sport/water4.jpg",
-            "/lakshya/gallery/water_sport/water5.jpg",
             "/lakshya/gallery/water_sport/water6.jpg",
             "/lakshya/gallery/water_sport/water7.jpg",
             "/lakshya/gallery/water_sport/water8.jpg",

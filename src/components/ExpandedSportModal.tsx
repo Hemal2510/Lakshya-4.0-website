@@ -33,6 +33,7 @@ export default function ExpandedSportModal({
                 src: photo,
                 width: 1200,   // good balance for large gallery
                 quality: 80,   // visually clean, bandwidth-safe
+                fit : "at_max",
             }),
             text: "",
         }));
