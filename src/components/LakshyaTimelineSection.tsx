@@ -156,7 +156,6 @@ function TimelineYearBlock({
                                 motto={motto}
                                 desc={desc}
                                 highlights={highlights}
-                                special={special}
                                 inView={true}
                                 right={false}
                             />
@@ -210,7 +209,6 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                        special={special}
                                         inView={inView}
                                         right={false}
                                     />
@@ -246,7 +244,7 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                        special={special}
+                    
                                         inView={inView}
                                         right={true}
                                     />
