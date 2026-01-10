@@ -111,6 +111,7 @@ function TimelineYearBlock({
                                motto,
                                desc,
                                highlights,
+                              
                                video,
                                right,
                            }: any) {
@@ -156,6 +157,7 @@ function TimelineYearBlock({
                                 motto={motto}
                                 desc={desc}
                                 highlights={highlights}
+                               
                                 inView={true}
                                 right={false}
                             />
@@ -209,6 +211,7 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
+                                       
                                         inView={inView}
                                         right={false}
                                     />
@@ -244,7 +247,7 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                    
+                                       
                                         inView={inView}
                                         right={true}
                                     />
@@ -275,7 +278,7 @@ function TimelineCard({
                           motto,
                           desc,
                           highlights,
-                          special,
+                          
                           inView,
                           right,
                       }: any) {
@@ -324,12 +327,8 @@ function TimelineCard({
                 ))}
             </ul>
 
-                
-            </motion.div>
-
-            {/* VIDEO */}
-            <VideoEmbed video={video} />
-        </div>
+         
+        </>
     );
 }
 
@@ -376,7 +375,6 @@ function CountUpOnView({ value, inView }: { value: string; inView: boolean }) {
     }
     return <span>{value}</span>;
 }
-
 
 
 
