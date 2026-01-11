@@ -8,31 +8,31 @@ const IMAGEKIT_BASE = `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT
 
 const years = [
     {
-        year: 2022,
+        year: 2023,
         title: "Lakshya 1.0 – Genesis",
         motto: "Breaking Barriers",
         desc: "The inaugural edition that set the foundation.",
         highlights: ["500+ participants", "10 sports categories", "Regional recognition"],
        
-        video: "https://www.youtube.com/embed/0K_9ZkeVoP8",
-    },
-    {
-        year: 2023,
-        title: "Lakshya 2.0 – Evolution",
-         motto: "Embrace The Chase",
-        desc: "Expanded reach and enhanced competition.",
-        highlights: ["800+ participants", "12 sports categories", "State-level participation"],
-       
-        video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        video: "https://www.youtube.com/embed/Adc-OIDQPWo?si=kpZx3dFsh4I838RI",
     },
     {
         year: 2024,
+        title: "Lakshya 2.0 – Evolution",
+         motto: "Embrace The Chase",
+        desc: "Expanded reach and enhanced competition.",
+        highlights: ["800+ participants", "10 sports categories", "State-level participation"],
+       
+        video: "https://www.youtube.com/embed/iz3SeNEjVr0",
+    },
+    {
+        year: 2025,
         title: "Lakshya 3.0 – Excellence",
         motto: "Ignite The Spirit",
         desc: "Setting new standards in collegiate sports.",
         highlights: ["1200+ participants", "13 sports categories","Most competitive edition"],
         
-        video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        video: "https://www.youtube.com/embed/Jr9P5HL_3aw?si=sVk82TLfk1zbOsIE",
     },
 ];
 

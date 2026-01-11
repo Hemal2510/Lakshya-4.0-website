@@ -94,7 +94,7 @@ export const sportsGallery = [
         ]
     },
     {
-        name:"Water Sports",
+        name:"Aquatics",
         lottie:"/lottie/watersports1.json",
         photos:[
             "/lakshya/gallery/water_sport/water1.jpg",
