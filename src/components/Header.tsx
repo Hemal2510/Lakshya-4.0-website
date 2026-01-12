@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -13,14 +13,12 @@ export default function Navbar() {
         { name: "Sponsors", href: "/sponsors" },
     ];
 
-    const registrationUrl = "https://registration.iiti.ac.in/lakshya26/";
-
     return (
         <motion.nav
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-[100]
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50
                  w-[92%] md:w-[80%] lg:w-[65%]
                  bg-white/5 backdrop-blur-xl
                  border border-white/10
@@ -30,9 +28,9 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-14">
                 {/* Brand / Logo */}
                 <Link href="/home" className="flex items-center gap-2 group">
-                    <span className="relative text-xl font-semibold text-white tracking-wide">
-                        LAKSHYA
-                    </span>
+          <span className="relative text-xl font-semibold text-white tracking-wide">
+            LAKSHYA
+          </span>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -48,9 +46,8 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    {/* CTA Button - Fixed Link */}
                     <motion.a
-                        href={registrationUrl}
+                        href="https://registration.iiti.ac.in/lakshya26/"
                         target="_blank"
                         rel="noopener noreferrer"
                         whileHover={{ scale: 1.07 }}
@@ -59,57 +56,60 @@ export default function Navbar() {
                     >
                         Register
                     </motion.a>
+
                 </div>
 
                 {/* Mobile Menu Icon */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden text-gray-300 hover:text-white p-2"
+                    className="md:hidden text-gray-300 hover:text-white"
                 >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         {isOpen ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                            />
                         ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
                         )}
                     </svg>
                 </button>
             </div>
 
-            {/* Mobile Dropdown with Animation */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden overflow-hidden"
+            {/* Mobile Dropdown */}
+            {isOpen && (
+                <div className="md:hidden mt-3">
+                    <div
+                        className="
+              w-full rounded-3xl bg-slate-900/95 border border-white/10
+              shadow-2xl shadow-black/60
+              px-5 py-4 flex flex-col gap-3 text-center
+            "
                     >
-                        <div className="mt-3 w-full rounded-3xl bg-slate-900/95 border border-white/10 shadow-2xl px-5 py-4 flex flex-col gap-3 text-center">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className="py-2 text-gray-200 hover:text-white hover:bg-white/5 rounded-2xl transition font-medium"
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
-
-                            <motion.a
-                                whileTap={{ scale: 0.95 }}
-                                href={registrationUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-2 block w-full px-6 py-3 rounded-2xl bg-white text-black font-semibold text-center shadow-md hover:bg-white/90 transition"
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                onClick={() => setIsOpen(false)}
+                                className="py-2 text-gray-200 hover:text-white hover:bg-white/5 rounded-2xl transition font-medium"
                             >
-                                Register
-                            </motion.a>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                {link.name}
+                            </Link>
+                        ))}
+
+                        <motion.a whileTap={{ scale: 0.95 }} href={"https://registration.iiti.ac.in/lakshya26/"} target="_blank" rel="noopener noreferrer" className="mt-2 block w-full px-6 py-3 rounded-2xl bg-white text-black font-semibold text-center shadow-md hover:bg-white/90 transition" > Register </motion.a>
+
+                    </div>
+                </div>
+            )}
         </motion.nav>
     );
 }
