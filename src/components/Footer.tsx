@@ -71,7 +71,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                     {/* Column 1: About */}
                     <div>
-                        <div className="font-bold mb-4 text-lg text-white">Lakshya 2025</div>
+                        <div className="font-bold mb-4 text-lg text-white">Lakshya 2026</div>
                         <div className="text-sm text-gray-300">
                             Welcomes all enthusiasts who believe it's all about making the
                             right choices and taking the plunge.
@@ -126,7 +126,7 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/10 gap-4">
                     <div className="text-gray-400 text-sm">
-                        &copy; 2025 Lakshya IIT Indore. All Rights Reserved.
+                        &copy; 2026 Lakshya IIT Indore. All Rights Reserved.
                     </div>
 
                     
