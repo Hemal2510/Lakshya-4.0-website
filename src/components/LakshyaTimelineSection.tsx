@@ -1,7 +1,7 @@
 "use client";
 import { useInView } from "react-intersection-observer";
 import { motion, useAnimation } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import CountUp from "react-countup";
 
 const IMAGEKIT_BASE = `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`;
@@ -13,16 +13,14 @@ const years = [
         motto: "Breaking Barriers",
         desc: "The inaugural edition that set the foundation.",
         highlights: ["500+ participants", "10 sports categories", "Regional recognition"],
-       
         video: "https://www.youtube.com/embed/Adc-OIDQPWo?si=kpZx3dFsh4I838RI",
     },
     {
         year: 2024,
         title: "Lakshya 2.0 – Evolution",
-         motto: "Embrace The Chase",
+        motto: "Embrace The Chase",
         desc: "Expanded reach and enhanced competition.",
         highlights: ["800+ participants", "10 sports categories", "State-level participation"],
-       
         video: "https://www.youtube.com/embed/iz3SeNEjVr0",
     },
     {
@@ -30,8 +28,7 @@ const years = [
         title: "Lakshya 3.0 – Excellence",
         motto: "Ignite The Spirit",
         desc: "Setting new standards in collegiate sports.",
-        highlights: ["1200+ participants", "13 sports categories","Most competitive edition"],
-        
+        highlights: ["1200+ participants", "13 sports categories", "Most competitive edition"],
         video: "https://www.youtube.com/embed/Jr9P5HL_3aw?si=sVk82TLfk1zbOsIE",
     },
 ];
@@ -93,7 +90,25 @@ export default function LakshyaTimelineSection() {
             </div>
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 z-10">
-                <div className="flex flex-col gap-20 md:gap-32 relative z-10">
+                {/* CENTER GLOWING LINE (md and up) */}
+                <motion.div
+                    className="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 z-20"
+                    initial={{ opacity: 0.7 }}
+                    animate={{ opacity: [0.7, 1, 0.9, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    {/* main bright core */}
+                    <div className="w-[3px] h-full bg-gradient-to-b from-cyan-300 via-sky-400 to-indigo-400" />
+
+                    {/* strong glow halo */}
+                    <div className="absolute inset-0 -mx-[6px] bg-cyan-400/50 blur-xl" />
+
+                    {/* softer outer glow */}
+                    <div className="absolute inset-0 -mx-[12px] bg-sky-500/35 blur-2xl" />
+                </motion.div>
+
+
+                <div className="flex flex-col gap-20 md:gap-32 relative z-20">
                     {years.map((event, idx) => (
                         <TimelineYearBlock {...event} key={event.year} right={idx % 2 === 1} />
                     ))}
@@ -103,7 +118,7 @@ export default function LakshyaTimelineSection() {
     );
 }
 
-/* REST OF YOUR FILE IS 100% UNCHANGED BELOW */
+/* REST OF YOUR FILE */
 
 function TimelineYearBlock({
                                year,
@@ -111,7 +126,6 @@ function TimelineYearBlock({
                                motto,
                                desc,
                                highlights,
-                              
                                video,
                                right,
                            }: any) {
@@ -157,7 +171,6 @@ function TimelineYearBlock({
                                 motto={motto}
                                 desc={desc}
                                 highlights={highlights}
-                               
                                 inView={true}
                                 right={false}
                             />
@@ -211,7 +224,6 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                       
                                         inView={inView}
                                         right={false}
                                     />
@@ -247,7 +259,6 @@ function TimelineYearBlock({
                                         motto={motto}
                                         desc={desc}
                                         highlights={highlights}
-                                       
                                         inView={inView}
                                         right={true}
                                     />
@@ -278,7 +289,6 @@ function TimelineCard({
                           motto,
                           desc,
                           highlights,
-                          
                           inView,
                           right,
                       }: any) {
@@ -326,8 +336,6 @@ function TimelineCard({
                     </li>
                 ))}
             </ul>
-
-         
         </>
     );
 }
@@ -362,7 +370,6 @@ function VideoHoverPreview({ video }: { video: string }) {
     );
 }
 
-
 function CountUpOnView({ value, inView }: { value: string; inView: boolean }) {
     const matches = value.match(/^(\d+)\+?\s/);
     if (matches) {
@@ -375,8 +382,3 @@ function CountUpOnView({ value, inView }: { value: string; inView: boolean }) {
     }
     return <span>{value}</span>;
 }
-
-
-
-
-

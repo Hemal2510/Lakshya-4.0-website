@@ -32,18 +32,15 @@ class Media {
     plane: Mesh;
     program: Program;
     titleMesh?: Mesh;
-
     index: number;
     total: number;
-
     x = 0;
     width = 0;
     widthTotal = 0;
-
     baseW = 0;
     baseH = 0;
     maxZoom = 1.6;
-    imageAspect: number = 1; // 👈 ADD THIS
+    imageAspect: number = 1;
 
     constructor({
                     gl,
@@ -77,7 +74,8 @@ class Media {
                 void main() {
                     vUv = uv;
                     vec3 p = position;
-                    p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.15;
+                    // Subtle wave effect
+                    p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.1;
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
                 }
             `,
@@ -95,33 +93,32 @@ class Media {
                 }
 
                 void main() {
-                 vec2 planeRatio = vec2(uPlaneSizes.x / uPlaneSizes.y, 1.0);
-                    vec2 imageRatio = vec2(uImageSizes.x / uImageSizes.y, 1.0);
-
-                    float r = planeRatio.x / imageRatio.x;
-
-                    vec2 ratio;
-                    if (r > 1.0) {
-                        // plane is wider → scale by height
-                        ratio = vec2(1.0 / r, 1.0);
+                    // OBJECT-FIT COVER LOGIC
+                    vec2 s = uPlaneSizes; // Screen/Plane size
+                    vec2 i = uImageSizes; // Image size
+                    float rs = s.x / s.y;
+                    float ri = i.x / i.y;
+                    vec2 newUv = vUv;
+                    
+                    if (rs > ri) {
+                        newUv.y = newUv.y * ri / rs + 0.5 * (1.0 - ri / rs);
                     } else {
-                        // plane is taller → scale by width
-                        ratio = vec2(1.0, r);
+                        newUv.x = newUv.x * rs / ri + 0.5 * (1.0 - rs / ri);
                     }
 
-                    vec2 uv = vUv * ratio + (1.0 - ratio) * 0.5;
-
-
-                    vec4 color = texture2D(tMap, uv);
+                    vec4 color = texture2D(tMap, newUv);
+                    
+                    // Rounded corners based on UVs
                     float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
                     float alpha = 1.0 - smoothstep(-0.002, 0.002, d);
+                    
                     gl_FragColor = vec4(color.rgb, alpha);
                 }
             `,
             uniforms: {
                 tMap: { value: texture },
                 uPlaneSizes: { value: [0, 0] },
-                uImageSizes: { value: [0, 0] },
+                uImageSizes: { value: [1, 1] }, // Default 1:1 to avoid div by zero
                 uBorderRadius: { value: borderRadius },
                 uTime: { value: Math.random() * 100 },
             },
@@ -135,15 +132,10 @@ class Media {
         img.crossOrigin = "anonymous";
         img.src = image;
         img.onload = () => {
-  texture.image = img;
-  const iw = img.naturalWidth;
-  const ih = img.naturalHeight;
-
-  this.program.uniforms.uImageSizes.value = [iw, ih];
-
-  // store image aspect
-  this.imageAspect = iw / ih;
-};
+            texture.image = img;
+            this.imageAspect = img.naturalWidth / img.naturalHeight;
+            this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
+        };
 
         const { texture: textTex } = createTextTexture(gl, text, font, textColor);
         const textProg = new Program(gl, {
@@ -174,30 +166,25 @@ class Media {
     onResize({ viewport, screen }: any) {
         const isMobile = screen.width < 768;
 
-        // ---- RELATIVE / PERCENTAGE-BASED FORMULATION ----
+        // Force a rectangular aspect ratio (e.g., 0.7 for portrait or 1.5 for landscape)
+        // Let's go with a nice cinematic 1.4 rectangle
+        const targetAspect = isMobile ? 0.8 : 1.4;
 
-        const widthRatio = isMobile ? 0.72 : 0.42;
-        const aspectRatio = this.imageAspect || 1.35;
+        const widthRatio = isMobile ? 0.65 : 0.35;
+        this.baseW = viewport.width * widthRatio;
+        this.baseH = this.baseW / targetAspect;
 
-
-        const heightLimitRatio = isMobile ? 0.75 : 0.65;
-
-        let baseW = viewport.width * widthRatio;
-        let baseH = baseW / aspectRatio;
-        // let baseH = baseW * aspectRatio;
-
-        const maxH = viewport.height * heightLimitRatio;
-        if (baseH > maxH) {
-            baseH = maxH;
-            baseW = baseH / aspectRatio;
+        // Ensure it doesn't get too tall for the screen
+        const maxHeight = viewport.height * 0.6;
+        if (this.baseH > maxHeight) {
+            this.baseH = maxHeight;
+            this.baseW = this.baseH * targetAspect;
         }
 
-        this.baseW = baseW;
-        this.baseH = baseH;
-        this.maxZoom = isMobile ? 1.35 : 1.6;
+        this.maxZoom = isMobile ? 1.25 : 1.4;
 
         const maxWidth = this.baseW * this.maxZoom;
-        const gap = 0.8;
+        const gap = isMobile ? 0.4 : 0.8;
         this.width = maxWidth + gap;
         this.widthTotal = this.width * this.total;
         this.x = this.width * this.index;
@@ -206,9 +193,9 @@ class Media {
         this.program.uniforms.uPlaneSizes.value = [this.baseW, this.baseH];
 
         if (this.titleMesh) {
-            const th = this.baseH * 0.18;
-            this.titleMesh.scale.set(th * 3, th, 1);
-            this.titleMesh.position.y = -this.baseH * 0.6 - th * 0.5;
+            const th = this.baseH * 0.12;
+            this.titleMesh.scale.set(th * 4, th, 1);
+            this.titleMesh.position.y = -this.baseH * 0.5 - th;
         }
     }
 
@@ -220,6 +207,7 @@ class Media {
 
         this.plane.position.x = currX;
 
+        // Curvature calculation
         const H = viewport.width / 2;
         const B = Math.abs(bend);
         const R = (H * H + B * B) / (2 * B);
@@ -229,24 +217,21 @@ class Media {
         this.plane.position.y = bend > 0 ? -arc : arc;
         this.plane.rotation.z = -Math.sign(currX) * Math.asin(effX / R);
 
+        // Zoom effect based on center proximity
         const dist = Math.abs(currX);
-        const maxDist = viewport.width * 0.3;
+        const maxDist = viewport.width * 0.4;
         const t = Math.max(0, 1 - dist / maxDist);
         const s = 1 + (this.maxZoom - 1) * t;
 
-        this.plane.scale.x = this.baseW * s;
-        this.plane.scale.y = this.baseH * s;
+        this.plane.scale.set(this.baseW * s, this.baseH * s, 1);
 
-        this.program.uniforms.uPlaneSizes.value = [
-            this.plane.scale.x,
-            this.plane.scale.y,
-        ];
-
-        this.program.uniforms.uTime.value += 0.04;
+        // CRITICAL: Update uniform so shader knows current dimensions for aspect correction
+        this.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
+        this.program.uniforms.uTime.value += 0.02;
     }
 }
 
-export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: any) {
+export default function HybridGallery({ items, bend = 2.5, textColor = "#fff" }: any) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -262,22 +247,21 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         ref.current.appendChild(gl.canvas);
 
         const camera = new Camera(gl);
-        const updateCameraZ = () => {
-            camera.position.z = window.innerWidth < 768 ? 28 : 20;
-        };
-        updateCameraZ();
+        camera.position.z = 20;
 
         const scene = new Transform();
-        const geometry = new Plane(gl, { widthSegments: 50, heightSegments: 50 });
+        // Use more segments for a smoother bend
+        const geometry = new Plane(gl, { widthSegments: 64, heightSegments: 64 });
 
         let viewport = { width: 0, height: 0 };
         let screen = { width: 0, height: 0 };
         let medias: Media[] = [];
 
         const resize = () => {
+            if (!ref.current) return;
             screen = {
-                width: ref.current!.clientWidth,
-                height: ref.current!.clientHeight,
+                width: ref.current.clientWidth,
+                height: ref.current.clientHeight,
             };
 
             renderer.setSize(screen.width, screen.height);
@@ -287,57 +271,40 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
             const h = 2 * Math.tan(fov / 2) * camera.position.z;
             viewport = { width: h * camera.aspect, height: h };
 
-            updateCameraZ();
             medias.forEach(m => m.onResize({ viewport, screen }));
         };
 
-        const data =
-            items ??
-            [
-                { image: "https://picsum.photos/seed/1/800/600", text: "One" },
-                { image: "https://picsum.photos/seed/2/800/600", text: "Two" },
-                { image: "https://picsum.photos/seed/3/800/600", text: "Three" },
-            ];
+        const data = items ?? [
+            { image: "https://picsum.photos/seed/1/1200/800", text: "STORY ONE" },
+            { image: "https://picsum.photos/seed/2/1200/800", text: "STORY TWO" },
+            { image: "https://picsum.photos/seed/3/1200/800", text: "STORY THREE" },
+            { image: "https://picsum.photos/seed/4/1200/800", text: "STORY FOUR" },
+        ];
 
-        medias = data.map(
-            (d: any, i: number) =>
-                new Media({
-                    gl,
-                    geometry,
-                    scene,
-                    image: d.image,
-                    text: d.text,
-                    index: i,
-                    total: data.length,
-                    viewport,
-                    screen,
-                    textColor,
-                    borderRadius: 0.05,
-                    font: "bold 28px sans-serif",
-                })
+        medias = data.map((d: any, i: number) =>
+            new Media({
+                gl,
+                geometry,
+                scene,
+                image: d.image,
+                text: d.text,
+                index: i,
+                total: data.length,
+                viewport,
+                screen,
+                textColor,
+                borderRadius: 0.04,
+                font: "900 32px Inter, sans-serif",
+            })
         );
 
         resize();
         window.addEventListener("resize", resize);
 
         let scroll = { current: 0, target: 0 };
-        const isMobile = window.innerWidth < 768;
-        const baseSpeed = isMobile ? 0.16 : 0.07;
-
-        const ease = 0.05;
-
         const loop = () => {
-            let speedMult = 1;
-            if (medias[0]) {
-                const w = medias[0].width;
-                const mod = ((scroll.target % w) + w) % w;
-                const dist = Math.min(mod, w - mod);
-                const centerT = 1 - Math.min(dist / (w * 0.3), 1);
-                speedMult = 1 - 0.85 * centerT;
-            }
-
-            scroll.target += baseSpeed * speedMult;
-            scroll.current = lerp(scroll.current, scroll.target, ease);
+            scroll.target += 0.05; // Auto-scroll speed
+            scroll.current = lerp(scroll.current, scroll.target, 0.05);
 
             medias.forEach(m => m.update(scroll.current, viewport, bend));
             renderer.render({ scene, camera });
@@ -353,5 +320,5 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         };
     }, [items, bend, textColor]);
 
-    return <div ref={ref} className="w-full h-full" />;
+    return <div ref={ref} className="w-full h-full min-h-[500px]" />;
 }
