@@ -76,16 +76,19 @@ class Media {
         void main() {
           vUv = uv;
           vec3 p = position;
-          p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.15;
+          p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.12;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
             fragment: `
         precision highp float;
+
         uniform sampler2D tMap;
         uniform vec2 uPlaneSizes;
         uniform vec2 uImageSizes;
         uniform float uBorderRadius;
+        uniform float uContain; // 0 = cover (desktop), 1 = contain (mobile)
+
         varying vec2 vUv;
 
         float roundedBoxSDF(vec2 p, vec2 b, float r) {
@@ -94,23 +97,32 @@ class Media {
         }
 
         void main() {
-          vec2 planeRatio = vec2(uPlaneSizes.x / uPlaneSizes.y, 1.0);
-          vec2 imageRatio = vec2(uImageSizes.x / uImageSizes.y, 1.0);
+          vec2 plane = uPlaneSizes;
+          vec2 image = uImageSizes;
 
-          float r = planeRatio.x / imageRatio.x;
+          float rs = plane.x / plane.y;
+          float ri = image.x / image.y;
 
-          vec2 ratio;
-          if (r > 1.0) {
-            ratio = vec2(1.0 / r, 1.0);
+          // COVER (desktop)
+          vec2 uvCover = vUv;
+          if (rs > ri) {
+            uvCover.y = uvCover.y * ri / rs + 0.5 * (1.0 - ri / rs);
           } else {
-            ratio = vec2(1.0, r);
+            uvCover.x = uvCover.x * rs / ri + 0.5 * (1.0 - rs / ri);
           }
 
-          vec2 uv = vUv * ratio + (1.0 - ratio) * 0.5;
+          // CONTAIN (mobile)
+          float r = rs / ri;
+          vec2 ratio = r > 1.0 ? vec2(1.0 / r, 1.0) : vec2(1.0, r);
+          vec2 uvContain = vUv * ratio + (1.0 - ratio) * 0.5;
+
+          vec2 uv = mix(uvCover, uvContain, uContain);
 
           vec4 color = texture2D(tMap, uv);
+
           float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
           float alpha = 1.0 - smoothstep(-0.002, 0.002, d);
+
           gl_FragColor = vec4(color.rgb, alpha);
         }
       `,
@@ -120,6 +132,7 @@ class Media {
                 uImageSizes: { value: [1, 1] },
                 uBorderRadius: { value: borderRadius },
                 uTime: { value: Math.random() * 100 },
+                uContain: { value: 0 },
             },
             transparent: true,
         });
@@ -169,31 +182,39 @@ class Media {
         const isMobile = screen.width < 768;
 
         if (!isMobile) {
-            // ---------- DESKTOP / LAPTOP ----------
-            const aspect = 1.25;
-            const widthRatio = 0.30;
+            // ===== LAPTOP / DESKTOP (VERSION 1) =====
+            const aspect = 1.4;
+            const widthRatio = 0.35;
 
             this.baseW = viewport.width * widthRatio;
             this.baseH = this.baseW / aspect;
+
+            const maxH = viewport.height * 0.6;
+            if (this.baseH > maxH) {
+                this.baseH = maxH;
+                this.baseW = this.baseH * aspect;
+            }
+
             this.maxZoom = 1.4;
+            this.program.uniforms.uContain.value = 0.0;
         } else {
-            // ---------- MOBILE (YOUR NEW ALGO) ----------
+            // ===== MOBILE (VERSION 2) =====
             const widthRatio = 0.8;
-            const heightLimitRatio = 0.75;
 
             this.baseW = viewport.width * widthRatio;
             this.baseH = this.baseW / this.imageAspect;
 
-            const maxH = viewport.height * heightLimitRatio;
+            const maxH = viewport.height * 0.75;
             if (this.baseH > maxH) {
                 this.baseH = maxH;
                 this.baseW = this.baseH * this.imageAspect;
             }
 
             this.maxZoom = 1.2;
+            this.program.uniforms.uContain.value = 1.0;
         }
 
-        const gap = 0.8;
+        const gap = isMobile ? 0.4 : 0.8;
         this.width = this.baseW * this.maxZoom + gap;
         this.widthTotal = this.width * this.total;
         this.x = this.width * this.index;
@@ -202,9 +223,9 @@ class Media {
         this.program.uniforms.uPlaneSizes.value = [this.baseW, this.baseH];
 
         if (this.titleMesh) {
-            const th = this.baseH * 0.18;
-            this.titleMesh.scale.set(th * 3, th, 1);
-            this.titleMesh.position.y = -this.baseH * 0.6 - th * 0.5;
+            const th = this.baseH * (isMobile ? 0.18 : 0.12);
+            this.titleMesh.scale.set(th * 3.5, th, 1);
+            this.titleMesh.position.y = -this.baseH * 0.55 - th;
         }
     }
 
@@ -226,7 +247,7 @@ class Media {
         this.plane.rotation.z = -Math.sign(currX) * Math.asin(effX / R);
 
         const dist = Math.abs(currX);
-        const maxDist = viewport.width * 0.3;
+        const maxDist = viewport.width * 0.35;
         const t = Math.max(0, 1 - dist / maxDist);
         const s = 1 + (this.maxZoom - 1) * t;
 
@@ -236,11 +257,15 @@ class Media {
             this.plane.scale.y,
         ];
 
-        this.program.uniforms.uTime.value += 0.04;
+        this.program.uniforms.uTime.value += 0.03;
     }
 }
 
-export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: any) {
+export default function HybridGallery({
+                                          items,
+                                          bend = 2.8,
+                                          textColor = "#fff",
+                                      }: any) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -259,7 +284,7 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         camera.position.z = window.innerWidth < 768 ? 28 : 20;
 
         const scene = new Transform();
-        const geometry = new Plane(gl, { widthSegments: 50, heightSegments: 50 });
+        const geometry = new Plane(gl, { widthSegments: 64, heightSegments: 64 });
 
         let viewport = { width: 0, height: 0 };
         let screen = { width: 0, height: 0 };
@@ -283,9 +308,9 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
 
         const data =
             items ?? [
-                { image: "https://picsum.photos/seed/1/800/600", text: "One" },
-                { image: "https://picsum.photos/seed/2/800/600", text: "Two" },
-                { image: "https://picsum.photos/seed/3/800/600", text: "Three" },
+                { image: "https://picsum.photos/seed/1/1200/800", text: "ONE" },
+                { image: "https://picsum.photos/seed/2/1200/800", text: "TWO" },
+                { image: "https://picsum.photos/seed/3/1200/800", text: "THREE" },
             ];
 
         medias = data.map(
@@ -302,7 +327,7 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
                     screen,
                     textColor,
                     borderRadius: 0.05,
-                    font: "bold 28px sans-serif",
+                    font: "900 28px Inter, sans-serif",
                 })
         );
 
@@ -310,10 +335,10 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         window.addEventListener("resize", resize);
 
         let scroll = { current: 0, target: 0 };
-        const baseSpeed = window.innerWidth < 768 ? 0.10 : 0.07;
+        const speed = window.innerWidth < 768 ? 0.05: 0.065;
 
         const loop = () => {
-            scroll.target += baseSpeed;
+            scroll.target += speed;
             scroll.current = lerp(scroll.current, scroll.target, 0.05);
 
             medias.forEach(m => m.update(scroll.current, viewport, bend));
@@ -330,5 +355,5 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         };
     }, [items, bend, textColor]);
 
-    return <div ref={ref} className="w-full h-full" />;
+    return <div ref={ref} className="w-full h-full min-h-[500px]" />;
 }
