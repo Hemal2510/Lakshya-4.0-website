@@ -79,10 +79,7 @@ export default function ExpandedSportModal({
                     />
                 </div>
 
-                {/* Keyboard navigation hint */}
-                <div className="mt-6 text-white/60 text-sm font-medium z-10">
-                    ←→ Arrow keys or drag to navigate
-                </div>
+
             </div>
         </>,
         document.body
