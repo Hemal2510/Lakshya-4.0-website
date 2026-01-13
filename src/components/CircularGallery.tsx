@@ -170,8 +170,8 @@ class Media {
 
         if (!isMobile) {
             // ---------- DESKTOP / LAPTOP ----------
-            const aspect = 1.4;
-            const widthRatio = 0.38;
+            const aspect = 1.25;
+            const widthRatio = 0.30;
 
             this.baseW = viewport.width * widthRatio;
             this.baseH = this.baseW / aspect;
