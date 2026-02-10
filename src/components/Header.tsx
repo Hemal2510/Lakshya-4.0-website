@@ -46,14 +46,17 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    {/* CTA Button */}
-                    <motion.button
+                    <motion.a
+                        href="https://registration.iiti.ac.in/lakshya26/"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         whileHover={{ scale: 1.07 }}
                         whileTap={{ scale: 0.93 }}
-                        className="px-5 py-2 rounded-full bg-white text-black font-semibold shadow-md hover:bg-white/90 transition duration-300"
+                        className="px-5 py-2 rounded-full bg-white text-black font-semibold shadow-md hover:bg-white/90 transition duration-300 text-sm no-underline"
                     >
                         Register
-                    </motion.button>
+                    </motion.a>
+
                 </div>
 
                 {/* Mobile Menu Icon */}
@@ -102,15 +105,8 @@ export default function Navbar() {
                             </Link>
                         ))}
 
-                        <button
-                            className="
-                mt-2 w-full px-6 py-3 rounded-2xl
-                bg-white text-black font-semibold
-                shadow-md hover:bg-white/90 transition
-              "
-                        >
-                            Register
-                        </button>
+                        <motion.a whileTap={{ scale: 0.95 }} href={"https://registration.iiti.ac.in/lakshya26/"} target="_blank" rel="noopener noreferrer" className="mt-2 block w-full px-6 py-3 rounded-2xl bg-white text-black font-semibold text-center shadow-md hover:bg-white/90 transition" > Register </motion.a>
+
                     </div>
                 </div>
             )}

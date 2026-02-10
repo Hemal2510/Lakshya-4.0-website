@@ -65,7 +65,7 @@ export default function HeroSection() {
               </span>
                         </div>
 
-                        <p
+                        <div
                             className="text-lg sm:text-2xl md:text-3xl font-semibold italic text-blue-200 mt-4 sm:mt-6 mb-4 text-center"
                             style={{
                                 textShadow: "0 2px 24px #38bdf8",
@@ -82,12 +82,12 @@ export default function HeroSection() {
                                 showCursor={true}
                                 cursorCharacter="|"
                             />
-                        </p>
+                        </div>
 
                         {/* Main buttons */}
                         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mt-2 sm:mt-4 w-full sm:w-auto">
                             <a
-                                href="#register"
+                                href="https://registration.iiti.ac.in/lakshya26/"
                                 className="px-8 py-4 text-lg sm:text-xl md:text-2xl rounded-xl font-bold text-white
                            bg-blue-600/90 shadow-lg hover:bg-blue-700/90
                            focus:outline-none focus:ring-2 focus:ring-blue-300
@@ -96,7 +96,7 @@ export default function HeroSection() {
                                 Register
                             </a>
                             <a
-                                href="#events"
+                                href="events"
                                 className="px-8 py-4 text-lg sm:text-xl md:text-2xl rounded-xl font-bold text-blue-200
                            border-2 border-blue-400 bg-blue-400/10
                            hover:bg-blue-400/20 hover:text-white

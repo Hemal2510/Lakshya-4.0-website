@@ -41,7 +41,7 @@ export default function SponsorsSection() {
     <section id="sponsors" className="w-full mt-48">
       <div className="mx-auto px-4">
         <h2 className="text-center text-2xl sm:text-3xl font-semibold text-slate-100">
-          Previous Sponsors
+          Past Sponsors
         </h2>
 
         <p className="text-center text-sm text-slate-400 mb-8">

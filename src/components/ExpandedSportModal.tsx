@@ -26,46 +26,62 @@ export default function ExpandedSportModal({
         };
     }, []);
 
-    /* 🔥 Generate ImageKit URLs ONLY when modal opens */
+    /* 🔥 RECTANGLE-FRIENDLY ImageKit URLs - NO CROPPING! */
     const galleryItems = useMemo(() => {
         return sport.photos.map((photo) => ({
             image: imageKitLoader({
                 src: photo,
-                width: 1200,   // good balance for large gallery
-                quality: 80,   // visually clean, bandwidth-safe
+                width: 1400,      // Wider for rectangle look
+                height: 900,      // 16:10 aspect ratio (perfect for sports)
+                quality: 85,      // Crisp quality
+                fit: "contain",   // ✅ PRESERVES ASPECT RATIO - NO CROPPING!
             }),
             text: "",
         }));
-    }, [sport.name]);
+    }, [sport.photos]);
 
     return createPortal(
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center backdrop-blur-lg bg-black/70">
-            {/* Title */}
-            <div className="w-full text-center font-bold text-4xl sm:text-5xl text-white mb-8 z-10">
-                {sport.name}
-            </div>
-
-            {/* Close button */}
-            <button
+        <>
+            {/* Backdrop */}
+            <div
+                className="fixed inset-0 z-[9998] bg-black/70 backdrop-blur-lg"
                 onClick={onClose}
-                className="absolute top-6 right-6 text-white text-3xl font-bold z-20"
-                aria-label="Close"
-            >
-                &times;
-            </button>
+            />
 
-            {/* Circular gallery container */}
-            <div className="w-[90vw] max-w-[1400px] h-[60vh] sm:h-[65vh] relative">
-                <CircularGallery
-                    items={galleryItems}
-                    bend={2.5}
-                    textColor="transparent"
-                    borderRadius={0.03}
-                    scrollSpeed={0.75}
-                    scrollEase={0.08}
-                />
+            {/* Modal Content */}
+            <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-6">
+                {/* Title */}
+                <div className="w-full text-center mb-8 z-10">
+                    <h2 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
+                        {sport.name}
+                    </h2>
+                </div>
+
+                {/* Close button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-8 right-8 text-white/90 text-3xl font-bold z-20
+                               hover:text-blue-400 hover:scale-110 transition-all duration-200"
+                    aria-label="Close gallery"
+                >
+                    ✕
+                </button>
+
+                {/* Rectangle-optimized gallery container */}
+                <div className="w-[92vw] max-w-[1600px] h-[65vh] sm:h-[70vh] lg:h-[75vh] relative flex items-center justify-center">
+                    <CircularGallery
+                        items={galleryItems}
+                        bend={2.2}           // Less bend for rectangles
+                        textColor="transparent"
+                        borderRadius={0.025} // Subtle rounded corners
+                        scrollSpeed={0.8}
+                        scrollEase={0.085}
+                    />
+                </div>
+
+
             </div>
-        </div>,
+        </>,
         document.body
     );
 }

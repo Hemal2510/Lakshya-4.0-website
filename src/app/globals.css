@@ -316,38 +316,28 @@
     }
 }
 
-
-
-
-/* For Spotlight effect on title sponsor*/
-
-@import "tailwindcss";
-
-@theme inline {
-  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+@keyframes buttonSweep {
+    0% {
+        transform: translateX(-120%) rotate(12deg);
+        opacity: 0;
+    }
+    35% {
+        opacity: 0.35;
+    }
+    100% {
+        transform: translateX(120%) rotate(12deg);
+        opacity: 0;
+    }
 }
 
-@keyframes spotlight {
-  0% {
-    opacity: 0;
-    transform: translate(-72%, -62%) scale(0.5);
-  }
-  100% {
-    opacity: 2;
-    transform: translate(-53%, -43%) scale(3.8);
-  }
+/* Idle animation */
+.animate-buttonSweep {
+    animation: buttonSweep 3.2s linear infinite;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+/* Faster + brighter on hover */
+.group:hover .animate-buttonSweep {
+    animation-duration: 1.4s;
+    opacity: 0.6;
+}
 
