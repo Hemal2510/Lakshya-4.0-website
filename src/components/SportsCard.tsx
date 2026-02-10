@@ -42,6 +42,7 @@ export default function SponsorGrid() {
     return (
         <section ref={sectionRef} className="h-screen w-full bg-black flex items-center justify-center overflow-hidden relative">
 
+<<<<<<< HEAD
             <div className="relative w-[1200px] h-[750px] flex items-center justify-center">
 
                 {/* CENTER: TITLE SPONSOR (Card #1) */}
@@ -50,6 +51,25 @@ export default function SponsorGrid() {
                         <img src="/images/redbull.png" className="object-contain p-8" alt="Title" />
                     </div>
                     <span className="unit-label text-cyan-400 font-bold block text-center mt-3 tracking-widest">TITLE SPONSOR</span>
+=======
+            {/* Lottie container */}
+            <div className="flex-1 w-full flex items-start justify-center relative z-20">
+                <div className="w-[90%] mt-4 aspect-[4/3] rounded-3xl overflow-hidden">
+                    {animationData && (
+                        <Lottie
+                            lottieRef={animationRef}
+                            animationData={animationData}
+                            autoplay={false}
+                            loop={true}
+                            //speed={1.5}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "contain",
+                            }}
+                        />
+                    )}
+>>>>>>> 044680499a1926337a044bc68a761333ce74cb1b
                 </div>
 
                 {/* THE 11 PARTNERS (Orbiting around center) */}

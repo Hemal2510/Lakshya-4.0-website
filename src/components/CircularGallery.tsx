@@ -335,7 +335,7 @@ export default function HybridGallery({
         window.addEventListener("resize", resize);
 
         let scroll = { current: 0, target: 0 };
-        const speed = window.innerWidth < 768 ? 0.05: 0.065;
+        const speed = window.innerWidth < 768 ? 0.05: 0.05;
 
         const loop = () => {
             scroll.target += speed;

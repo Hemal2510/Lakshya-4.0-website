@@ -65,7 +65,7 @@ export default function HeroSection() {
               </span>
                         </div>
 
-                        <p
+                        <div
                             className="text-lg sm:text-2xl md:text-3xl font-semibold italic text-blue-200 mt-4 sm:mt-6 mb-4 text-center"
                             style={{
                                 textShadow: "0 2px 24px #38bdf8",
@@ -82,7 +82,7 @@ export default function HeroSection() {
                                 showCursor={true}
                                 cursorCharacter="|"
                             />
-                        </p>
+                        </div>
 
                         {/* Main buttons */}
                         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 mt-2 sm:mt-4 w-full sm:w-auto">
