@@ -4,51 +4,41 @@ import { motion } from "framer-motion";
 
 export default function TitleSponsorSection() {
     return (
-        <section className="py-40 px-8">
-            {/* SECTION HEADING */}
-            <h2 className="text-center text-7xl font-extrabold tracking-[0.35em] text-white mb-32">
-                TITLE SPONSOR
-            </h2>
+        <section className="pb-4 pt-32 md:pt-44 px-8 text-center relative overflow-hidden">
+            {/* Very faint ambient glow - stays totally still */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] md:w-[60rem] h-[20rem] md:h-[40rem] bg-blue-600/5 blur-[120px] rounded-full -z-10" />
 
-            {/* TITLE SPONSOR LOGO */}
-            <div className="flex justify-center relative">
-                {/* BACKGROUND GLOW */}
-                <div
-                    className="
-            absolute
-            -z-10
-            w-[32rem] h-[32rem]
-            rounded-full
-            blur-[120px]
-            bg-gradient-to-br
-            from-blue-500/60
-            via-sky-400/50
-            to-indigo-600/60
-          "
-                />
+            {/* Responsive Heading: One line on Desktop, Forced Two on Mobile */}
+            <motion.h2
+                layoutId="title-heading"
+                className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[0.15em] md:tracking-[0.35em] text-white mb-12 md:mb-20 px-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6"
+            >
+                <span>TITLE</span>
+                <span>SPONSOR</span>
+            </motion.h2>
 
-                {/* LOGO WITH AMBIENT MOTION */}
+            <div className="relative flex justify-center px-4">
+                {/* The Logo: NO animate prop. It lands here and STOPS. */}
                 <motion.div
-                    animate={{
-                        scale: [1, 1.04, 1],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                    whileHover={{
-                        scale: 1.12,
-                    }}
-                    className="w-[28rem] h-[16rem] flex items-center justify-center"
+                    layoutId="title-sponsor-logo"
+                    className="w-[15rem] sm:w-[24rem] md:w-[30rem] h-auto flex items-center justify-center"
                 >
                     <img
                         src="/images/sponsors/sponsor7.jpg"
                         alt="Title Sponsor"
-                        className="max-h-full max-w-full object-contain"
+                        className="max-h-full max-w-full object-contain drop-shadow-[0_10px_40px_rgba(0,0,0,0.7)]"
                     />
                 </motion.div>
             </div>
+
+            <div className="mt-16 w-32 h-px bg-blue-800/40 mx-auto" />
+
+            <motion.p
+                layoutId="title-quote"
+                className="mt-12 text-base md:text-2xl text-blue-400/70 italic max-w-2xl mx-auto px-4 font-medium"
+            >
+                “Powering champions. Fueling ambition.”
+            </motion.p>
         </section>
     );
 }

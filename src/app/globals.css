@@ -48,7 +48,6 @@
     --radius: 0.625rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
-    /* ... (all your other :root variables) ... */
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.141 0.005 285.823);
     --popover: oklch(1 0 0);
@@ -65,279 +64,351 @@
     --border: oklch(0.92 0.004 286.32);
     --input: oklch(0.92 0.004 286.32);
     --ring: oklch(0.705 0.015 286.067);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.141 0.005 285.823);
-    --sidebar-primary: oklch(0.21 0.006 285.885);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.967 0.001 286.375);
-    --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-    --sidebar-border: oklch(0.92 0.004 286.32);
-    --sidebar-ring: oklch(0.705 0.015 286.067);
 }
 
-.dark {
-    --background: oklch(0.141 0.005 285.823);
-    --foreground: oklch(0.985 0 0);
-    /* ... (all your other .dark variables) ... */
-    --card: oklch(0.21 0.006 285.885);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.21 0.006 285.885);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.92 0.004 286.32);
-    --primary-foreground: oklch(0.21 0.006 285.885);
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.274 0.006 286.033);
-    --muted-foreground: oklch(0.705 0.015 286.067);
-    --accent: oklch(0.274 0.006 286.033);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.552 0.016 285.938);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.21 0.006 285.885);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.274 0.006 286.033);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.552 0.016 285.938);
-}
-
+/* --- BASE --- */
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
+    * { @apply border-border outline-ring/50; }
     body {
-        @apply bg-background text-foreground;
+        @apply bg-black text-foreground;
+        margin: 0;
+        overflow-x: hidden;
+        scroll-behavior: initial !important;
     }
 }
 
-/* --- 1. GLOBAL AURORA BACKGROUND (The "Auro Thing") --- */
+/* --- YOUR ORIGINAL STYLES (Aurora, Buttons, Cards) --- */
 .aurora-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-
-    background-image:
-            radial-gradient(circle at 10% 20%, rgba(94, 234, 212, 0.1), transparent 35%),
-            radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.1), transparent 35%),
-            radial-gradient(circle at 20% 80%, rgba(124, 58, 237, 0.1), transparent 35%);
-
-    filter: blur(100px);
-    animation: aurora-animate 20s ease-in-out infinite;
-    background-position: 0% 0%;
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background-image: radial-gradient(circle at 10% 20%, rgba(94, 234, 212, 0.1), transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.1), transparent 35%);
+    filter: blur(100px); animation: aurora-animate 20s ease-in-out infinite;
     background-size: 300% 300%;
 }
-
 @keyframes aurora-animate {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* --- 2. REUSABLE SECTION GLOW (For the "Gradient Tinch") --- */
-.section-glow-blue::before {
-    content: "";
-    position: absolute;
-    top: -25%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 80%;
-
-    background-image: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2), transparent 70%);
-
-    filter: blur(120px);
-    z-index: -1;
-    opacity: 0.8;
-}
-
-/* --- 3. DOTTED GRID (For the Footer) --- */
-.dotted-grid-bg {
-    background-image:
-            radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
-    background-size: 20px 20px;
-}
-
-/* --- 4. NEW GLOWING BUTTON (Vercel Style) --- */
-.glowing-btn-wrapper {
-    position: relative;
-    display: inline-block; /* Makes the wrapper only as big as the button */
-}
-
-.glowing-btn {
-    /* This is the button itself */
-    position: relative;
-    z-index: 1; /* Sits on top of the glow */
-    display: flex;
-    align-items: center;
-    gap: 0.5rem; /* 8px */
-    background-color: #27272a; /* zinc-800 */
-    color: #e4e4e7; /* zinc-200 */
-    font-weight: 500;
-    padding: 0.5rem 1.25rem; /* 8px 20px */
-    border-radius: 9999px; /* rounded-full */
-    border: 1px solid #52525b; /* zinc-600 */
-    transition: all 0.3s ease;
-}
-
-.glowing-btn:hover {
-    color: #fff;
-    border-color: #a1a1aa; /* zinc-400 */
-}
-
-/* This is the glow *behind* the button */
-.glowing-btn-wrapper::after {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    /* Make it slightly larger than the button */
-    inset: -3px;
-    border-radius: 9999px;
-
-    /* The static blue glow */
-    background: rgba(59, 130, 246, 0.5);
-    filter: blur(10px);
-    opacity: 0.9;
-    transition: all 0.3s ease;
-}
-
-.glowing-btn-wrapper:hover::after {
-    opacity: 1;
-    filter: blur(12px);
-}
-
-
-
-.glass-bg-card {
-    backdrop-filter: blur(16px) saturate(140%);
-    background: rgba(24, 25, 50, 0.24);
-    border-radius: 1.3rem;
-    box-shadow: 0 6px 35px rgba(0,26,80,0.11);
-    border: 1.8px solid rgba(100,180,255,0.15);
-}
-
-
-/* Premium Sport Card Styles */
 .sport-card-premium {
     position: relative;
-    background: linear-gradient(
-            135deg,
-            rgba(20, 25, 45, 0.9) 0%,
-            rgba(30, 35, 60, 0.8) 100%
-    );
+    background: linear-gradient(135deg, rgba(20, 25, 45, 0.9) 0%, rgba(30, 35, 60, 0.8) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s ease;
 }
-
-/* Gradient border glow effect */
-.sport-card-premium::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 2px;
-    background: linear-gradient(
-            135deg,
-            rgba(59, 130, 246, 0.5),
-            rgba(147, 51, 234, 0.5),
-            rgba(236, 72, 153, 0.5)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-}
-
-/* Hover effects */
-.sport-card-premium:hover::before {
-    opacity: 1;
-}
-
 .sport-card-premium:hover {
     transform: translateY(-8px);
-    box-shadow:
-            0 12px 48px rgba(0, 0, 0, 0.6),
-            0 0 40px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(59, 130, 246, 0.3);
 }
 
-/* Inner glow on hover */
-.sport-card-premium::after {
-    content: '';
+/* --- THE REVEAL FIX (ADD THIS BELOW YOUR ORIGINAL) --- */
+
+.reveal-master-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+}
+
+/* This centers the quote perfectly */
+
+
+.intro-text-center {
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-            circle at 50% 0%,
-            rgba(59, 130, 246, 0.15),
-            transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    pointer-events: none;
+    padding-bottom: 10vh; /* Keeps text in the lower half */
+    padding-inline: 15vw;
+}
+
+/* Fix for "Our Partners" visibility */
+.intro-text-center h1 {
+    font-size: clamp(2rem, 2vw, 1.4rem);
+    font-family: serif;
+    font-style: italic;
+    /* Pure white with a slight glow to ensure it's visible over the background */
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.8);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.15em;
+    opacity: 1 !important; /* Ensures it doesn't get lost */
+}
+
+/* Reduced size for the big quote */
+.intro-text-center p {
+    /* Reduced from 12rem down to a manageable size */
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    z-index: 10;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.1;
+
+    /* Switching from Red to Cyan/White to match the 4.0 logo */
+    background: linear-gradient(to bottom, #ffffff 40%, #00f2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: drop-shadow(0 0 12px rgba(0, 242, 255, 0.4));
+    max-width: 750px; /* Constrains width to prevent overlap with side trees */
+}
+/* The revealed background */
+.background-content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.hero-bg-image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    background-image: url('https://images.unsplash.com/photo-1512747646639-ed824d861e0d?q=80&w=2070&auto=format&fit=crop');
+    background-position: center;
+    background-size: cover;
+}
+
+/* The Zooming Mask */
+.mask-container {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
     pointer-events: none;
 }
 
-.sport-card-premium:hover::after {
-    opacity: 1;
+.mask-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+}
+.hero-bg-image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    /* This points directly to public/images/inner-bg.jpg */
+    background-image: url('/images/sport0.jpg');
+    background-position: center;
+    background-size: cover;
 }
 
-/* Bottom label gradient */
-.sport-card-premium > div:last-child {
-    background: linear-gradient(
-            to top,
-            rgba(10, 15, 30, 0.95) 0%,
-            rgba(20, 25, 45, 0.7) 100%
-    );
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-@keyframes sponsor-slide-left {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+.grid-master-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
 }
 
-@keyframes buttonSweep {
-    0% {
-        transform: translateX(-120%) rotate(12deg);
-        opacity: 0;
-    }
-    35% {
-        opacity: 0.35;
-    }
-    100% {
-        transform: translateX(120%) rotate(12deg);
-        opacity: 0;
-    }
+.sponsor-subgrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2rem;
+    width: 90%;
+    max-width: 1500px;
+    height: 80vh;
+    position: relative;
 }
 
-/* Idle animation */
-.animate-buttonSweep {
-    animation: buttonSweep 3.2s linear infinite;
+.grid-layer {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid; /* Clean alignment */
+    grid-template-rows: subgrid;
 }
 
-/* Faster + brighter on hover */
-.group:hover .animate-buttonSweep {
-    animation-duration: 1.4s;
-    opacity: 0.6;
+.center-cell-anchor {
+    grid-area: 2 / 3;
+    position: relative;
 }
 
+.main-scaler-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 50;
+    overflow: hidden;
+}
+
+.partner-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.partner-unit img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.partner-unit:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+}
+
+.partner-label {
+    margin-top: 12px;
+    font-size: 0.7rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Grid Cell Positions */
+.cell-1-1 { grid-area: 1 / 1; }
+.cell-1-5 { grid-area: 1 / 5; }
+.cell-3-2 { grid-area: 3 / 2; }
+.cell-3-4 { grid-area: 3 / 4; }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 95%;
+    max-width: 1300px;
+    height: 75vh; /* Controlled height to prevent overflow/cutting */
+    position: relative;
+}
+
+.center-cell-anchor {
+    grid-area: 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #111; /* Dark card background */
+    border-radius: 12px;
+    padding: 15%; /* Keeps logo away from edges */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* CRITICAL: Prevents logos from being cut off */
+}
+
+.unit-label {
+    margin-top: 8px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: #888;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 20px;
+    width: 90vw;
+    height: 80vh;
+    position: relative;
+}
+
+/* This container acts as the 'Landing Zone' */
+.main-sponsor-megacell {
+    grid-column: 2 / 5; /* Spans 3 columns: 2, 3, and 4 */
+    grid-row: 1 / 4;    /* Spans all 3 rows */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.main-scaler-box {
+    width: 100%;
+    height: 100%;
+    max-width: 500px; /* Adjust to how big you want the "Large" version */
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-wrapper {
+    width: 100%;
+    height: 100%;
+    background: #050505;
+    border-radius: 20px;
+    padding: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Prevents the 'Red Bull' cut-off issue */
+}
+
+/* Helper for standard small units */
+.partner-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.col-1 { grid-column: 1; }
+.col-5 { grid-column: 5; }
+.row-1 { grid-row: 1; }
+.row-3 { grid-row: 3; }
+
+.inner-card, .inner-card-hero {
+    width: 100%;
+    height: 100%;
+    background: rgba(18, 18, 18, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* This padding is the "Safety Zone" that prevents cropping */
+    padding: 18%;
+    overflow: hidden;
+}
+
+.inner-card-hero {
+    border-color: rgba(0, 242, 255, 0.4);
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.15);
+}
+
+.logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    /* CRITICAL: contain ensures the logo is never cropped */
+    object-fit: contain;
+}
+
+/* Ensure orbit cards don't feel too small on large screens */
+.orbit-card {
+    min-width: 140px;
+    min-height: 180px;
+}
