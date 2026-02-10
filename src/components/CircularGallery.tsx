@@ -20,7 +20,6 @@ function createTextTexture(gl: any, text: string, font: string, color: string) {
     ctx.fillStyle = color;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
     const texture = new Texture(gl, { generateMipmaps: false });
@@ -42,7 +41,8 @@ class Media {
 
     baseW = 0;
     baseH = 0;
-    maxZoom = 1.6;
+    maxZoom = 1.4;
+    imageAspect = 1;
 
     constructor({
                     gl,
@@ -65,53 +65,74 @@ class Media {
 
         this.program = new Program(gl, {
             vertex: `
-                precision highp float;
-                attribute vec3 position;
-                attribute vec2 uv;
-                uniform mat4 modelViewMatrix;
-                uniform mat4 projectionMatrix;
-                uniform float uTime;
-                varying vec2 vUv;
+        precision highp float;
+        attribute vec3 position;
+        attribute vec2 uv;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform float uTime;
+        varying vec2 vUv;
 
-                void main() {
-                    vUv = uv;
-                    vec3 p = position;
-                    p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.15;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-                }
-            `,
+        void main() {
+          vUv = uv;
+          vec3 p = position;
+          p.z += (sin(p.x * 4.0 + uTime) + cos(p.y * 2.0 + uTime)) * 0.12;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
             fragment: `
-                precision highp float;
-                uniform sampler2D tMap;
-                uniform vec2 uPlaneSizes;
-                uniform vec2 uImageSizes;
-                uniform float uBorderRadius;
-                varying vec2 vUv;
+        precision highp float;
 
-                float roundedBoxSDF(vec2 p, vec2 b, float r) {
-                    vec2 d = abs(p) - b;
-                    return length(max(d, vec2(0.0))) + min(max(d.x, d.y), 0.0) - r;
-                }
+        uniform sampler2D tMap;
+        uniform vec2 uPlaneSizes;
+        uniform vec2 uImageSizes;
+        uniform float uBorderRadius;
+        uniform float uContain; // 0 = cover (desktop), 1 = contain (mobile)
 
-                void main() {
-                    vec2 ratio = vec2(
-                        min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-                        min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-                    );
-                    vec2 uv = vUv * ratio + (1.0 - ratio) * 0.5;
+        varying vec2 vUv;
 
-                    vec4 color = texture2D(tMap, uv);
-                    float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
-                    float alpha = 1.0 - smoothstep(-0.002, 0.002, d);
-                    gl_FragColor = vec4(color.rgb, alpha);
-                }
-            `,
+        float roundedBoxSDF(vec2 p, vec2 b, float r) {
+          vec2 d = abs(p) - b;
+          return length(max(d, vec2(0.0))) + min(max(d.x, d.y), 0.0) - r;
+        }
+
+        void main() {
+          vec2 plane = uPlaneSizes;
+          vec2 image = uImageSizes;
+
+          float rs = plane.x / plane.y;
+          float ri = image.x / image.y;
+
+          // COVER (desktop)
+          vec2 uvCover = vUv;
+          if (rs > ri) {
+            uvCover.y = uvCover.y * ri / rs + 0.5 * (1.0 - ri / rs);
+          } else {
+            uvCover.x = uvCover.x * rs / ri + 0.5 * (1.0 - rs / ri);
+          }
+
+          // CONTAIN (mobile)
+          float r = rs / ri;
+          vec2 ratio = r > 1.0 ? vec2(1.0 / r, 1.0) : vec2(1.0, r);
+          vec2 uvContain = vUv * ratio + (1.0 - ratio) * 0.5;
+
+          vec2 uv = mix(uvCover, uvContain, uContain);
+
+          vec4 color = texture2D(tMap, uv);
+
+          float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
+          float alpha = 1.0 - smoothstep(-0.002, 0.002, d);
+
+          gl_FragColor = vec4(color.rgb, alpha);
+        }
+      `,
             uniforms: {
                 tMap: { value: texture },
                 uPlaneSizes: { value: [0, 0] },
-                uImageSizes: { value: [0, 0] },
+                uImageSizes: { value: [1, 1] },
                 uBorderRadius: { value: borderRadius },
                 uTime: { value: Math.random() * 100 },
+                uContain: { value: 0 },
             },
             transparent: true,
         });
@@ -124,6 +145,7 @@ class Media {
         img.src = image;
         img.onload = () => {
             texture.image = img;
+            this.imageAspect = img.naturalWidth / img.naturalHeight;
             this.program.uniforms.uImageSizes.value = [
                 img.naturalWidth,
                 img.naturalHeight,
@@ -134,15 +156,15 @@ class Media {
         const textProg = new Program(gl, {
             vertex: this.program.vertex,
             fragment: `
-                precision highp float;
-                uniform sampler2D tMap;
-                varying vec2 vUv;
-                void main() {
-                    vec4 c = texture2D(tMap, vUv);
-                    if (c.a < 0.1) discard;
-                    gl_FragColor = c;
-                }
-            `,
+        precision highp float;
+        uniform sampler2D tMap;
+        varying vec2 vUv;
+        void main() {
+          vec4 c = texture2D(tMap, vUv);
+          if (c.a < 0.1) discard;
+          gl_FragColor = c;
+        }
+      `,
             uniforms: { tMap: { value: textTex } },
             transparent: true,
         });
@@ -159,28 +181,41 @@ class Media {
     onResize({ viewport, screen }: any) {
         const isMobile = screen.width < 768;
 
-        // ---- RELATIVE / PERCENTAGE-BASED FORMULATION ----
+        if (!isMobile) {
+            // ===== LAPTOP / DESKTOP (VERSION 1) =====
+            const aspect = 1.4;
+            const widthRatio = 0.35;
 
-        const widthRatio = isMobile ? 0.72 : 0.42;
-        const aspectRatio = 1.35;
-        const heightLimitRatio = isMobile ? 0.75 : 0.65;
+            this.baseW = viewport.width * widthRatio;
+            this.baseH = this.baseW / aspect;
 
-        let baseW = viewport.width * widthRatio;
-        let baseH = baseW * aspectRatio;
+            const maxH = viewport.height * 0.6;
+            if (this.baseH > maxH) {
+                this.baseH = maxH;
+                this.baseW = this.baseH * aspect;
+            }
 
-        const maxH = viewport.height * heightLimitRatio;
-        if (baseH > maxH) {
-            baseH = maxH;
-            baseW = baseH / aspectRatio;
+            this.maxZoom = 1.4;
+            this.program.uniforms.uContain.value = 0.0;
+        } else {
+            // ===== MOBILE (VERSION 2) =====
+            const widthRatio = 0.8;
+
+            this.baseW = viewport.width * widthRatio;
+            this.baseH = this.baseW / this.imageAspect;
+
+            const maxH = viewport.height * 0.75;
+            if (this.baseH > maxH) {
+                this.baseH = maxH;
+                this.baseW = this.baseH * this.imageAspect;
+            }
+
+            this.maxZoom = 1.2;
+            this.program.uniforms.uContain.value = 1.0;
         }
 
-        this.baseW = baseW;
-        this.baseH = baseH;
-        this.maxZoom = isMobile ? 1.35 : 1.6;
-
-        const maxWidth = this.baseW * this.maxZoom;
-        const gap = 0.8;
-        this.width = maxWidth + gap;
+        const gap = isMobile ? 0.4 : 0.8;
+        this.width = this.baseW * this.maxZoom + gap;
         this.widthTotal = this.width * this.total;
         this.x = this.width * this.index;
 
@@ -188,9 +223,9 @@ class Media {
         this.program.uniforms.uPlaneSizes.value = [this.baseW, this.baseH];
 
         if (this.titleMesh) {
-            const th = this.baseH * 0.18;
-            this.titleMesh.scale.set(th * 3, th, 1);
-            this.titleMesh.position.y = -this.baseH * 0.6 - th * 0.5;
+            const th = this.baseH * (isMobile ? 0.18 : 0.12);
+            this.titleMesh.scale.set(th * 3.5, th, 1);
+            this.titleMesh.position.y = -this.baseH * 0.55 - th;
         }
     }
 
@@ -212,23 +247,25 @@ class Media {
         this.plane.rotation.z = -Math.sign(currX) * Math.asin(effX / R);
 
         const dist = Math.abs(currX);
-        const maxDist = viewport.width * 0.3;
+        const maxDist = viewport.width * 0.35;
         const t = Math.max(0, 1 - dist / maxDist);
         const s = 1 + (this.maxZoom - 1) * t;
 
-        this.plane.scale.x = this.baseW * s;
-        this.plane.scale.y = this.baseH * s;
-
+        this.plane.scale.set(this.baseW * s, this.baseH * s, 1);
         this.program.uniforms.uPlaneSizes.value = [
             this.plane.scale.x,
             this.plane.scale.y,
         ];
 
-        this.program.uniforms.uTime.value += 0.04;
+        this.program.uniforms.uTime.value += 0.03;
     }
 }
 
-export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: any) {
+export default function HybridGallery({
+                                          items,
+                                          bend = 2.8,
+                                          textColor = "#fff",
+                                      }: any) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -244,13 +281,10 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         ref.current.appendChild(gl.canvas);
 
         const camera = new Camera(gl);
-        const updateCameraZ = () => {
-            camera.position.z = window.innerWidth < 768 ? 28 : 20;
-        };
-        updateCameraZ();
+        camera.position.z = window.innerWidth < 768 ? 28 : 20;
 
         const scene = new Transform();
-        const geometry = new Plane(gl, { widthSegments: 50, heightSegments: 50 });
+        const geometry = new Plane(gl, { widthSegments: 64, heightSegments: 64 });
 
         let viewport = { width: 0, height: 0 };
         let screen = { width: 0, height: 0 };
@@ -269,16 +303,14 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
             const h = 2 * Math.tan(fov / 2) * camera.position.z;
             viewport = { width: h * camera.aspect, height: h };
 
-            updateCameraZ();
             medias.forEach(m => m.onResize({ viewport, screen }));
         };
 
         const data =
-            items ??
-            [
-                { image: "https://picsum.photos/seed/1/800/600", text: "One" },
-                { image: "https://picsum.photos/seed/2/800/600", text: "Two" },
-                { image: "https://picsum.photos/seed/3/800/600", text: "Three" },
+            items ?? [
+                { image: "https://picsum.photos/seed/1/1200/800", text: "ONE" },
+                { image: "https://picsum.photos/seed/2/1200/800", text: "TWO" },
+                { image: "https://picsum.photos/seed/3/1200/800", text: "THREE" },
             ];
 
         medias = data.map(
@@ -295,7 +327,7 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
                     screen,
                     textColor,
                     borderRadius: 0.05,
-                    font: "bold 28px sans-serif",
+                    font: "900 28px Inter, sans-serif",
                 })
         );
 
@@ -303,23 +335,11 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         window.addEventListener("resize", resize);
 
         let scroll = { current: 0, target: 0 };
-        const isMobile = window.innerWidth < 768;
-        const baseSpeed = isMobile ? 0.1 : 0.07;
-
-        const ease = 0.05;
+        const speed = window.innerWidth < 768 ? 0.05: 0.05;
 
         const loop = () => {
-            let speedMult = 1;
-            if (medias[0]) {
-                const w = medias[0].width;
-                const mod = ((scroll.target % w) + w) % w;
-                const dist = Math.min(mod, w - mod);
-                const centerT = 1 - Math.min(dist / (w * 0.3), 1);
-                speedMult = 1 - 0.85 * centerT;
-            }
-
-            scroll.target += baseSpeed * speedMult;
-            scroll.current = lerp(scroll.current, scroll.target, ease);
+            scroll.target += speed;
+            scroll.current = lerp(scroll.current, scroll.target, 0.05);
 
             medias.forEach(m => m.update(scroll.current, viewport, bend));
             renderer.render({ scene, camera });
@@ -335,5 +355,5 @@ export default function HybridGallery({ items, bend = 3, textColor = "#fff" }: a
         };
     }, [items, bend, textColor]);
 
-    return <div ref={ref} className="w-full h-full" />;
+    return <div ref={ref} className="w-full h-full min-h-[500px]" />;
 }

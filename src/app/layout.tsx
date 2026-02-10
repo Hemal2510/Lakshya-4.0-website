@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Lakshya 4.0 Event Site",
+    title: "Lakshya 4.0 | IIT Indore Sports Fest",
     description: "Annual sports event at IIT Indore",
+    icons: {
+        icon: "/favicon.ico",
+    },
 };
 
 export default function RootLayout({

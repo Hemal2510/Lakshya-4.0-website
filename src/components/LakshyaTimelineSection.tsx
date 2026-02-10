@@ -1,35 +1,35 @@
 "use client";
 import { useInView } from "react-intersection-observer";
 import { motion, useAnimation } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import CountUp from "react-countup";
+
+const IMAGEKIT_BASE = `https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`;
 
 const years = [
     {
-        year: 2022,
+        year: 2023,
         title: "Lakshya 1.0 – Genesis",
         motto: "Breaking Barriers",
         desc: "The inaugural edition that set the foundation.",
         highlights: ["500+ participants", "10 sports categories", "Regional recognition"],
-        video: "",
-    },
-    {
-        year: 2023,
-        title: "Lakshya 2.0 – Evolution",
-        motto: "Embrace The Chase",
-        desc: "Expanded reach and enhanced competition.",
-        highlights: ["800+ participants", "12 sports categories", "State-level participation"],
-        video:
-            "https://drive.google.com/uc?export=download&id=1LuhJOn6NUEb9BRXDpNfvdsXHWsgrv9FO",
+        video: "https://www.youtube.com/embed/Adc-OIDQPWo?si=kpZx3dFsh4I838RI",
     },
     {
         year: 2024,
+        title: "Lakshya 2.0 – Evolution",
+        motto: "Embrace The Chase",
+        desc: "Expanded reach and enhanced competition.",
+        highlights: ["800+ participants", "10 sports categories", "State-level participation"],
+        video: "https://www.youtube.com/embed/iz3SeNEjVr0",
+    },
+    {
+        year: 2025,
         title: "Lakshya 3.0 – Excellence",
         motto: "Ignite The Spirit",
         desc: "Setting new standards in collegiate sports.",
-        highlights: ["1200+ participants", "13 sports categories","Most competitive edition"],
-        video:
-            "https://drive.google.com/uc?export=download&id=1suIvB7iSRFpDtBskBFSiNd8RABcUlLqP",
+        highlights: ["1200+ participants", "13 sports categories", "Most competitive edition"],
+        video: "https://www.youtube.com/embed/Jr9P5HL_3aw?si=sVk82TLfk1zbOsIE",
     },
 ];
 
@@ -90,18 +90,25 @@ export default function LakshyaTimelineSection() {
             </div>
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 z-10">
-                {/* Central timeline line – only md+ */}
-                <div className="hidden md:block absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 overflow-hidden z-0">
-                    <motion.div
-                        className="absolute inset-0 bg-gradient-to-b from-blue-400 via-indigo-500 to-blue-600"
-                        animate={{ backgroundPosition: ["0% 0%", "0% 100%", "0% 0%"] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        style={{ backgroundSize: "100% 200%" }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-blue-400 via-indigo-500 to-blue-600 opacity-50 blur-sm" />
-                </div>
+                {/* CENTER GLOWING LINE (md and up) */}
+                <motion.div
+                    className="hidden md:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 z-20"
+                    initial={{ opacity: 0.7 }}
+                    animate={{ opacity: [0.7, 1, 0.9, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    {/* main bright core */}
+                    <div className="w-[3px] h-full bg-gradient-to-b from-cyan-300 via-sky-400 to-indigo-400" />
 
-                <div className="flex flex-col gap-20 md:gap-32 relative z-10">
+                    {/* strong glow halo */}
+                    <div className="absolute inset-0 -mx-[6px] bg-cyan-400/50 blur-xl" />
+
+                    {/* softer outer glow */}
+                    <div className="absolute inset-0 -mx-[12px] bg-sky-500/35 blur-2xl" />
+                </motion.div>
+
+
+                <div className="flex flex-col gap-20 md:gap-32 relative z-20">
                     {years.map((event, idx) => (
                         <TimelineYearBlock {...event} key={event.year} right={idx % 2 === 1} />
                     ))}
@@ -110,6 +117,8 @@ export default function LakshyaTimelineSection() {
         </section>
     );
 }
+
+/* REST OF YOUR FILE */
 
 function TimelineYearBlock({
                                year,
@@ -327,49 +336,20 @@ function TimelineCard({
                     </li>
                 ))}
             </ul>
-
         </>
     );
 }
 
 function VideoHoverPreview({ video }: { video: string }) {
-    const vidRef = useRef<HTMLVideoElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isManual, setIsManual] = useState(false);
-
-    const handlePlayPause = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (!vidRef.current) return;
-        if (isPlaying) {
-            vidRef.current.pause();
-            setIsPlaying(false);
-            setIsManual(false);
-        } else {
-            vidRef.current.play();
-            setIsPlaying(true);
-            setIsManual(true);
-        }
-    };
-
-    const handleMouseEnter = () => {
-        if (!isManual) {
-            vidRef.current?.play();
-            setIsPlaying(true);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (!isManual) {
-            vidRef.current?.pause();
-            setIsPlaying(false);
-        }
-    };
-
     return (
         <div className="relative rounded-2xl overflow-hidden group w-full max-w-md md:max-w-lg lg:w-[600px] lg:h-[340px] aspect-[4/3]">
+            {/* glow layers – unchanged */}
             <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-700/30 via-indigo-800/20 to-blue-900/30 rounded-2xl blur-sm" />
             <div className="absolute -inset-1 bg-gradient-to-br from-blue-600/40 via-indigo-700/30 to-blue-800/40 rounded-2xl opacity-50 group-hover:opacity-100 blur-md transition-all duration-500" />
+
+            {/* iframe container */}
             <div className="relative bg-gray-900/80 rounded-2xl overflow-hidden border border-blue-900/30 group-hover:border-blue-600/40 transition-all w-full h-full">
+                {/* overlay gradients – unchanged */}
                 <div className="absolute inset-0 pointer-events-none z-10">
                     <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-blue-900/20 to-transparent" />
                     <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-blue-900/20 to-transparent" />
@@ -377,47 +357,14 @@ function VideoHoverPreview({ video }: { video: string }) {
                     <div className="absolute bottom-0 left-0 right-0 h-16 md:h-24 bg-gradient-to-t from-blue-950/15 to-transparent" />
                 </div>
 
-                <video
-                    ref={vidRef}
+                {/* YOUTUBE IFRAME */}
+                <iframe
                     src={video}
-                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
-                    loop
-                    muted
-                    poster="/videos/preview.jpg"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    tabIndex={0}
+                    className="w-full h-full object-cover"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
                 />
-
-                <button
-                    className="absolute bottom-3 right-3 md:bottom-4 md:right-4 bg-black/60 backdrop-blur-sm text-white rounded-full p-2.5 md:p-3 shadow-xl hover:bg-blue-600/70 hover:scale-110 transition-all z-20 border border-white/20"
-                    onClick={handlePlayPause}
-                    tabIndex={0}
-                    type="button"
-                >
-                    {isPlaying ? (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 md:w-5 md:h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
-                            <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
-                        </svg>
-                    ) : (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 md:w-5 md:h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <polygon points="6,4 20,12 6,20" fill="currentColor" />
-                        </svg>
-                    )}
-                </button>
             </div>
         </div>
     );
