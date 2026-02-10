@@ -1,0 +1,124 @@
+[
+  {
+    "id": 1,
+    "title": "Football Men Semi Final",
+    "sport": "Football",
+    "event_type": "team",
+    "gender": "men",
+    "day": "2026-02-12",
+    "start_time": "2026-02-12T16:30:00+05:30",
+    "status": "completed",
+    "venue": "Main Football Ground",
+    "venue_location": "https://maps.google.com",
+    "participants": [
+      { "id": 1, "name": "CSE" },
+      { "id": 2, "name": "ECE" }
+    ],
+    "result": {
+      "type": "score",
+      "label": "Goals",
+      "teamA": 2,
+      "teamB": 1,
+      "winner": "CSE"
+    }
+  },
+
+  {
+    "id": 2,
+    "title": "Badminton Women Singles Final",
+    "sport": "Badminton",
+    "event_type": "individual",
+    "gender": "women",
+    "day": "2026-02-13",
+    "start_time": "2026-02-13T10:00:00+05:30",
+    "status": "completed",
+    "venue": "Indoor Stadium",
+    "venue_location": "https://maps.google.com",
+    "participants": [
+      { "id": 3, "name": "Aman Verma" },
+      { "id": 4, "name": "Rohit Sharma" }
+    ],
+    "result": {
+      "type": "sets",
+      "totalSets": 5,
+      "sets": [
+        { "teamA": 21, "teamB": 18 },
+        { "teamA": 19, "teamB": 21 },
+        { "teamA": 20, "teamB": 19 },
+        { "teamA": 23, "teamB": 15},
+        { "teamA": 20, "teamB": 19}
+      ],
+      "winner": "Aman Verma"
+    }
+  },
+
+  {
+    "id": 3,
+    "title": "Athletics 100m Men Final",
+    "sport": "Athletics",
+    "event_type": "individual",
+    "gender": "men",
+    "day": "2026-02-14",
+    "start_time": "2026-02-14T08:30:00+05:30",
+    "status": "completed",
+    "venue": "Athletics Track",
+    "venue_location": "https://maps.google.com",
+    "participants": [
+      { "id": 5, "name": "Runner A" },
+      { "id": 6, "name": "Runner B" },
+      { "id": 7, "name": "Runner C" }
+    ],
+    "result": {
+      "type": "table",
+      "headers": ["Position", "Athlete", "Time"],
+      "rows": [
+        ["1", "Runner A", "10.21s"],
+        ["2", "Runner B", "10.35s"],
+        ["3", "Runner C", "10.48s"]
+      ]
+    }
+  },
+
+  {
+    "id": 4,
+    "title": "Cricket Men Final",
+    "sport": "Cricket",
+    "event_type": "team",
+    "gender": "men",
+    "day": "2026-02-15",
+    "start_time": "2026-02-15T15:30:00+05:30",
+    "status": "completed",
+    "venue": "Cricket Ground",
+    "venue_location": "https://maps.google.com",
+    "participants": [
+      { "id": 8, "name": "Team Alpha" },
+      { "id": 9, "name": "Team Beta" }
+    ],
+    "result": {
+      "type": "link",
+      "winner": "Team Alpha",
+      "scorecardUrl": "https://example.com/scorecard"
+    }
+  },
+
+  {
+    "id": 5,
+    "title": "Chess Men Final",
+    "sport": "Chess",
+    "event_type": "individual",
+    "gender": "men",
+    "day": "2026-02-15",
+    "start_time": "2026-02-15T18:00:00+05:30",
+    "status": "completed",
+    "venue": "Chess Hall",
+    "venue_location": "https://maps.google.com",
+    "participants": [
+      { "id": 10, "name": "Player A" },
+      { "id": 11, "name": "Player B" }
+    ],
+    "result": {
+      "type": "text",
+      "result": "Player A won by checkmate in 42 moves"
+    }
+  }
+]
